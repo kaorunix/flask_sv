@@ -10,24 +10,29 @@ status_dict = {
     '3':'DELETE'
 }
 
-def getName(key, dict):
-    dict.get(key, "ERROR")
+def getName(key, p_dict):
+    return p_dict.get(str(key), "ERROR")
 
 def getStatusName(key):
-    getName(key, status_dict)
+    return getName(str(key), status_dict)
 
-def getValue(value, dict):
-    keys = [k for k, v in dict.items() if v == value]
-    if (keys.len() == 1):
+def getKey(value, p_dict):
+    keys = [k for k, v in p_dict.items() if v == value]
+    if (len(keys) == 1):
         return int(keys[0])
     else:
         return -1
    
-def getStatusValue(value):
-    getValue(value, status_dict)
+def getStatusKey(value):
+    return getKey(value, status_dict)
     
 # 0. NOT_APPROVED
 # 1. APPROVED
+
+approval_dict = {
+    '0' : 'NOT_APPROVED',
+    '1' : 'APPROVED'
+}
 
 def getApprovalName(status):
     if status == 0:
