@@ -21,3 +21,13 @@ def test_getById():
 #    assert account['updated_at'] == ''
 #    assert account['status'] == 1
                
+def test_create():
+    """
+    """
+    account = {
+        'account_name' : 'flask sv',
+        'start_on' : '2021-05-05 00:00:00',
+        'end_on' : '2030-12-31 00:00:00',
+    }
+
+    assert Account.create(account, 999) == True

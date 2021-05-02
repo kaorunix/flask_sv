@@ -3,6 +3,7 @@ from sqlalchemy.dialects.mysql import TIMESTAMP as Timestamp
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from model import Status
+import sqlalchemy
 #from sqlalch
 
 import datetime
@@ -66,15 +67,22 @@ def getById(id, user_id):
     return res
 
 
-def create(account, user_id):
-    account_name = account['account_name']
-    start_on = account['start_on']
-    end_on = account['end_on']
-    created_by = user_id
-    created_at = datetime.datetime.now()
-    updated_by = NULL
-    updated_at = NULL
-    status = Status.getStatusValue("NEW")
+def create(account_dict, user_id):
+    account = Account()
+    account.account_name = account_dict['account_name']
+    account.start_on = account_dict['start_on']
+    account.end_on = account_dict['end_on']
+    account.created_by = user_id
+    account.created_at = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    account.updated_by = sqlalchemy.null()
+    account.updated_at = sqlalchemy.null()
+    account.status = Status.getStatusKey("NEW")
+    Session = sessionmaker(bind=engine)
+    ses = Session()
+    ses.add(account)
+    res = ses.commit()
+    ses.close()
+    return res
 
 def update(account, user_id):
     id = account['id']
