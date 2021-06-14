@@ -66,6 +66,70 @@ def getById(id, user_id):
     # 返却されるレコードは１件だが配列のまま返すことでエラーハンドリングを受け手に任せる
     return res
 
+def search(account_dict, user_id):
+    Session = sessionmaker(bind=engine)
+    ses = Session()
+    res = None
+    rs = ses.query(Account)
+    v = account_dict.get('account_name')
+    if (v != None):
+        rs = rs.filter(Account.account_name==v)
+    v = account_dict.get('start_on')
+    if (v != None):
+        rs = rs.filter(Account.start_on==v)
+    v = account_dict.get('end_on')
+    if (v != None):
+        rs = rs.filter(Account.end_on==v)
+    v = account_dict.get('created_by')
+    if (v != None):
+        rs = rs.filter(Account.created_by==v)
+    v = account_dict.get('created_at')
+    if (v != None):
+        rs = rs.filter(Account.created_at==v)
+    v = account_dict.get('updated_at')
+    if (v != None):
+        rs = rs.filter(Account.updated_at==v)
+    v = account_dict.get('updated_by')
+    if (v != None):
+        rs = rs.filter(Account.updated_by==v)
+    v = account_dict.get('status')
+    if (v != None):
+        rs = rs.filter(Account.status==v)
+
+    res = rs.all()
+
+    ses.close()
+    return res
+            
+
+        #v = account_dict.get('account_name')
+#    if (v != None):
+#        rs = work_query.filter(Account.account_name==v)
+#    v = account_dict.get('start_on')
+#    if (v != None):
+#        work_query = work_query.filter(Account.start_on==v)
+#    v = account_dict.get('end_on')
+#    if (v != None):
+#        work_query = work_query.filter(Account.end_on==v)
+#    v = account_dict.get('created_by')
+#    if (v != None):
+#        work_query = work_query.filter(Account.created_by==v)
+#    v = account_dict.get('created_at')
+#    if (v != None):
+#        work_query = work_query.filter(Account.created_at==v)
+#    v = account_dict.get('updated_at')
+#    if (v != None):
+#        work_query = work_query.filter(Account.updated_at==v)
+#    v = account_dict.get('updated_by')
+#    if (v != None):
+#        work_query = work_query.filter(Account.updated_by==v)
+#    v = account_dict.get('status')
+#    if (v != None):
+#        work_query = work_query.filter(Account.status==v)
+#    res = work_query.all()
+#    ses.close()
+#    return res
+    
 
 def create(account_dict, user_id):
     account = Account()
@@ -79,9 +143,16 @@ def create(account_dict, user_id):
     account.status = Status.getStatusKey("NEW")
     Session = sessionmaker(bind=engine)
     ses = Session()
-    ses.add(account)
-    res = ses.commit()
-    ses.close()
+    ses.begin()
+    try:
+        ses.add(account)
+        ses.commit()
+        res = True
+    except:
+        ses.rollback()
+        res = False
+    finally:
+        ses.close()
     return res
 
 def update(account, user_id):
