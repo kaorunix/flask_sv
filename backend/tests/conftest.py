@@ -18,6 +18,7 @@ def delete_account():
     Session = sessionmaker(bind=engine)
     ses = Session()
     ses.query(Account).delete()
+    ses.commit()
     ses.close()
     yield 
 
