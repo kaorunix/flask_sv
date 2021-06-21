@@ -2,7 +2,7 @@ from flask import Flask, render_template
 from api import api_bp
 from restapi import AccountApi
 
-app = Flask(__name__, static_folder='../../creist_vue_with_flask/dist/static', template_folder='../../creist_vue_with_flask/dist')
+app = Flask(__name__, static_folder='../../frontend/dist/static', template_folder='../../frontend')
 app.register_blueprint(api_bp)
 
 @app.route('/', defaults={'path': ''})
