@@ -1,6 +1,5 @@
 from flask import Flask, render_template
 from api import api_bp
-from restapi import AccountApi
 
 app = Flask(__name__, static_folder='../../frontend/dist/static', template_folder='../../frontend')
 app.register_blueprint(api_bp)
@@ -10,11 +9,5 @@ app.register_blueprint(api_bp)
 def index(path):
     return render_template('index.html')
 
-@app.route('/account/get/<id>')
-def getAccount(id):
-    account_json = AccountApi.getById(id, 999)
-    return account_json
-
-
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
