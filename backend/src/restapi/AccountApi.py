@@ -104,5 +104,5 @@ def create(account_request, operation_account_id):
             "detail" : ""
         }
     }
-    ret = json.dumps(result_json)
+    ret = result_json
     return ret
