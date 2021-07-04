@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource
 from restapi import AccountApi
 
@@ -17,7 +17,7 @@ def createAccount():
     payload = request.data.decode('utf-8')
     print(f"payload={payload}")
     response_json = AccountApi.create(payload, system_account_id)
-    return response_json
+    return jsonify(response_json)
 
 
 class Spam(Resource):
