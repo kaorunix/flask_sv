@@ -14,6 +14,14 @@ from model.db import Base
 
 # model class
 class Account(Base):
+    """
+    accountモデル
+    flask_svシステムにログインするアカウントを管理するモデル
+
+    Parameters
+    ----------
+    Base : データベース接続子
+    """
     __tablename__ = 'account'
 
     id = Column(Integer, primary_key=True)
@@ -28,6 +36,17 @@ class Account(Base):
 
     # get Dict data
     def toDict(self):
+        """
+        ディクショナリ形式でクラスの全メンバを返却する
+
+        Parameters
+        ----------
+        self : 自クラス
+
+        Returns
+        -------
+        クラスの全メンバのディクショナリ
+        """
         return {
             'id' : int(self.id),
             'account_name' : str(self.account_name),
@@ -58,10 +77,22 @@ def getAll():
     return res
 
 
-def getById(id, user_id):
+def getById(account_id, user_id):
+    """
+    アカウントidでaccountテーブルを検索をし、該当したAccountオブジェクト群を取得する
+
+    Parameters
+    ----------
+    account_id : 検索対象のアカウントid
+    user_id : 操作ユーザーのアカウントid
+
+    Returns
+    -------
+    Accountオブジェクトのリスト
+    """
     Session = sessionmaker(bind=engine)
     ses = Session()
-    res = ses.query(Account).filter(Account.id==id).all()
+    res = ses.query(Account).filter(Account.id==account_id).all()
     ses.close()
     # 返却されるレコードは１件だが配列のまま返すことでエラーハンドリングを受け手に任せる
     return res
