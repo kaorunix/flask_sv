@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, request
 from flask_restful import Api, Resource
 from restapi import AccountApi
 
@@ -10,6 +10,14 @@ api_bp = Blueprint('api', __name__, url_prefix='/api')
 def getAccount(id):
     account_json = AccountApi.getById(id, system_account_id)
     return account_json
+
+@api_bp.route('/account/create/', methods=['POST'])
+def createAccount():
+    print("createAccount")
+    payload = request.data.decode('utf-8')
+    print(f"payload={payload}")
+    response_json = AccountApi.create(payload, system_account_id)
+    return response_json
 
 
 class Spam(Resource):
