@@ -72,9 +72,9 @@ def create(account_request, operation_account_id):
         正常
         異常
     """
-    
-    data = account_request.data.decode('utf-8')
-    date = json.loads(data)
+
+    print(account_request)
+    account_request = json.loads(account_request)
     account = {
         'account_name' : str(account_request['account_name']),
         'start_on' : str(account_request['start_on']),
@@ -85,12 +85,17 @@ def create(account_request, operation_account_id):
     try:
         if Account.create(account, operation_account_id) == True:
             code="I0001"
+            message="Created Account Succesfuly."
+        else:
+            code="E0001"
+            message=""
         
     except:
         code="E0009"
         message="Created failed"
     
-    result = Account.getById(account_id, operation_account_id)
+
+#    result = Account.getById(account_id, operation_account_id)
     result_json = {
         "body": "",
         "status": {
