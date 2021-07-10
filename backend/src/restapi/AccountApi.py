@@ -41,9 +41,9 @@ def getById(account_id, operation_account_id):
         "body": {
             "name": "account",
             "id": account_id,
-            "account_name": result[0].account_name,
-            "start_on": result[0].start_on.strftime("%Y-%m-%d %H:%M:%S"),
-            "end_on": result[0].end_on.strftime("%Y-%m-%d %H:%M:%S")
+            "account_name": result.account_name,
+            "start_on": result.start_on.strftime("%Y-%m-%d %H:%M:%S"),
+            "end_on": result.end_on.strftime("%Y-%m-%d %H:%M:%S")
         },
         "status": {
             "code" : "I0001",

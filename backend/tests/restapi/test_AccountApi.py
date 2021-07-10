@@ -2,6 +2,7 @@ from model import db
 from model import Account
 from model import Status
 from restapi import AccountApi
+import json
 import pprint
 import datetime
 import ujson
@@ -50,7 +51,7 @@ def test_account_get():
     account_id = result[0].id
 
     # APIから確認
-    url = f"http://localhost:5000/account/get/{account_id}"
+    url = f"http://localhost:5000/api/account/get/{account_id}"
     headers = {'Accept-Encoding': 'identity, deflate, compress, gzip',
                'Accept': '*/*', 'User-Agent': 'flask_sv/0.0.1',
                'Content-type': 'application/json; charset=utf-8',
@@ -60,7 +61,7 @@ def test_account_get():
     assert response.status_code == 200
 
     # BODYをjsonでパースできること
-    data = ujson.loads(response.text)
+    data = json.loads(response.text)
 
     # 配列内にurl, state, created_atの要素が存在すること
     assert 'body' in data
