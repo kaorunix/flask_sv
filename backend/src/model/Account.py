@@ -105,9 +105,8 @@ def getById(account_id, operation_account_id):
     """
     Session = sessionmaker(bind=engine)
     ses = Session()
-    res = ses.query(Account).filter(Account.id==account_id).all()
+    res = ses.query(Account).get(account_id)
     ses.close()
-    # 返却されるレコードは１件だが配列のまま返すことでエラーハンドリングを受け手に任せる
     return res
 
 def search(account_dict, operation_account_id):

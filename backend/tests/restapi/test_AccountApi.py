@@ -62,9 +62,7 @@ def test_account_get():
     assert response.status_code == 200
 
     # BODYをjsonでパースできること
-    print(f"text.data={response.text}")
     data = json.loads(response.text)
-    print(f"json.data={data}")
 
     # 配列内にurl, state, created_atの要素が存在すること
     assert 'body' in data

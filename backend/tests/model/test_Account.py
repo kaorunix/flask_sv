@@ -22,13 +22,21 @@ def test_getById():
         'account_name' : "flask_sv",
         'end_on' : "2030-12-31 00:00:00"
     }
-    result = Account.search(account_dict, 1)
+    results = Account.search(account_dict, 1)
+    account_id = results[0].id
+    result = Account.getById(account_id, 999)
 
-    assert result[0].account_name == account_dict['account_name'] 
-    assert result[0].start_on == datetime.datetime.strptime(account['start_on'], '%Y-%m-%d %H:%M:%S')
-    assert result[0].end_on == datetime.datetime.strptime(account_dict['end_on'], '%Y-%m-%d %H:%M:%S')
-    assert result[0].created_by == 999
-    assert result[0].status == Status.getStatusKey("NEW")
+    assert result.account_name == account_dict['account_name'] 
+    assert result.start_on == datetime.datetime.strptime(account['start_on'], '%Y-%m-%d %H:%M:%S')
+    assert result.end_on == datetime.datetime.strptime(account_dict['end_on'], '%Y-%m-%d %H:%M:%S')
+    assert result.created_by == 999
+    assert result.status == Status.getStatusKey("NEW")
+
+    assert results[0].account_name == account_dict['account_name'] 
+    assert results[0].start_on == datetime.datetime.strptime(account['start_on'], '%Y-%m-%d %H:%M:%S')
+    assert results[0].end_on == datetime.datetime.strptime(account_dict['end_on'], '%Y-%m-%d %H:%M:%S')
+    assert results[0].created_by == 999
+    assert results[0].status == Status.getStatusKey("NEW")
 
                
 def test_create():
