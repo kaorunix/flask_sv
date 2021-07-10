@@ -60,6 +60,19 @@ class Account(Base):
         }
     # datetime.strptime(str(self.start_on), "%Y-%m-%d %H:%M:%S")
 
+    def toJson(self):
+        return {
+            "name": "account",
+            "id" : self.account_id,
+            "account_name" : self.account_name,
+            "start_on" : self.start_on, 
+            "end_on" : self.end_on,
+            "created_by" : self.created_by,
+            "created_at" : self.created_at, 
+            "updated_by" : self.updated_by,
+            "updated_at" : self.updated_at,
+            "status" : Status.getStatusName(str(self.status))
+        }
     
 # get List data    
 def getByList(arr):
@@ -117,12 +130,12 @@ def search(account_dict, operation_account_id):
     v = account_dict.get('created_at')
     if (v != None):
         rs = rs.filter(Account.created_at==v)
-    v = account_dict.get('updated_at')
-    if (v != None):
-        rs = rs.filter(Account.updated_at==v)
     v = account_dict.get('updated_by')
     if (v != None):
         rs = rs.filter(Account.updated_by==v)
+    v = account_dict.get('updated_at')
+    if (v != None):
+        rs = rs.filter(Account.updated_at==v)
     v = account_dict.get('status')
     if (v != None):
         rs = rs.filter(Account.status==v)

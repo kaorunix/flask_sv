@@ -69,3 +69,28 @@ def test_account_get():
     # 配列内にurl, state, created_atの要素が存在すること
     assert 'body' in data
     assert 'status' in data
+
+
+def test_account_search():
+    """
+    """
+    account = {
+        'account_name' : "search_account",
+        'start_on' : '2021-05-23 00:00:00',
+        'end_on' : '2030-12-31 00:00:00'
+    }
+
+    # createのテスト
+    Account.create(account, 999) == True
+
+    query = {
+        "account_name":"search_account",
+        "start_on":"2021-05-23 00:00:00",
+        "end_on":"2030-12-31 00:00:00"
+    }
+    result = Account.search(query, 999)
+    assert result[0].account_name == account['account_name']
+    
+    assert result[0].start_on.strftime('%Y-%m-%d %H:%M:%S') == account['start_on'] #.strftime('%Y–%m–%d %H:%M:%S')
+    assert result[0].end_on.strftime('%Y-%m-%d %H:%M:%S') == account['end_on'] #.strftime('%Y–%m–%d %H:%M:%S')
+    assert result[0].created_by == 999
