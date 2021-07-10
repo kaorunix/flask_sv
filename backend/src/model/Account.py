@@ -77,14 +77,14 @@ def getAll():
     return res
 
 
-def getById(account_id, user_id):
+def getById(account_id, operation_account_id):
     """
     アカウントidでaccountテーブルを検索をし、該当したAccountオブジェクト群を取得する
 
     Parameters
     ----------
     account_id : 検索対象のアカウントid
-    user_id : 操作ユーザーのアカウントid
+    operation_account_id : 操作ユーザーのアカウントid
 
     Returns
     -------
@@ -97,7 +97,7 @@ def getById(account_id, user_id):
     # 返却されるレコードは１件だが配列のまま返すことでエラーハンドリングを受け手に任せる
     return res
 
-def search(account_dict, user_id):
+def search(account_dict, operation_account_id):
     Session = sessionmaker(bind=engine)
     ses = Session()
     res = None
@@ -162,12 +162,12 @@ def search(account_dict, user_id):
 #    return res
     
 
-def create(account_dict, user_id):
+def create(account_dict, operation_account_id):
     account = Account()
     account.account_name = account_dict['account_name']
     account.start_on = account_dict['start_on']
     account.end_on = account_dict['end_on']
-    account.created_by = user_id
+    account.created_by = operation_account_id
     account.created_at = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     account.updated_by = sqlalchemy.null()
     account.updated_at = sqlalchemy.null()
@@ -186,11 +186,11 @@ def create(account_dict, user_id):
         ses.close()
     return res
 
-def update(account, user_id):
+def update(account, operation_account_id):
     id = account['id']
     account_name = account['account_name']
     start_on = account['start_on']
     end_on = account['end_on']
-    updated_by = user_id
+    updated_by = operation_account_id
     updated_at = datetime.datetime.now()
     

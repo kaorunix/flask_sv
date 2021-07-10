@@ -4,7 +4,7 @@ import json
 import datetime
 #import requests
 
-def getById(account_id, user_id):
+def getById(account_id, operation_account_id):
     """
     /account/get/<id>で呼び出されたAPIの検索処理
 
@@ -12,7 +12,7 @@ def getById(account_id, user_id):
     ----------
     account_id : int
         検索するアカウントのアカウントID
-    user_id : int
+    operation_account_id : int
         Webアプリケーション操作アカウントのID
 
     Returns
@@ -35,7 +35,7 @@ def getById(account_id, user_id):
     }
     """
     
-    result = Account.getById(account_id, user_id)
+    result = Account.getById(account_id, operation_account_id)
     # TODO モデルの検索結果(正常・異常)によってレスポンスの出力内容を替える
     result_json = {
         "body": {
@@ -55,7 +55,7 @@ def getById(account_id, user_id):
     return ret
 
 
-def create(account_request, user_id):
+def create(account_request, operation_account_id):
     """
     /account/createで呼び出されたAPIの検索処理
 
@@ -63,7 +63,7 @@ def create(account_request, user_id):
     ----------
     account_request : json
         作成するアカウント詳細
-    user_id : int
+    operation_account_id : int
         Webアプリケーション操作アカウントのID
 
     Returns
@@ -83,14 +83,14 @@ def create(account_request, user_id):
     message=""
     code=""
     try:
-        if Account.create(account, user_id) == True:
+        if Account.create(account, operation_account_id) == True:
             code="I0001"
         
     except:
         code="E0009"
         message="Created failed"
     
-    result = Account.getById(account_id, user_id)
+    result = Account.getById(account_id, operation_account_id)
     result_json = {
         "body": "",
         "status": {
