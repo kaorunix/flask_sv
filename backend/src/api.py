@@ -19,6 +19,15 @@ def createAccount():
     response_json = AccountApi.create(payload, system_account_id)
     return jsonify(response_json)
 
+@api_bp.route('/account/search/', methods=['POST'])
+def searchAccount():
+    print("searchAccount")
+    payload = request.data.decode('utf-8')
+    print(f"payload={payload}")
+    response_json = AccountApi.search(payload, system_account_id)
+    return jsonify(response_json)
+
+
 
 class Spam(Resource):
     def get(self):
