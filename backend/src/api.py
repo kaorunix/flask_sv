@@ -11,18 +11,18 @@ def getAccount(id):
     account_json = AccountApi.getById(id, system_account_id)
     return account_json
 
-@api_bp.route('/account/create/', methods=['POST'])
+@api_bp.route('/account/create', methods=['POST'])
 def createAccount():
-    print("createAccount")
-    payload = request.data.decode('utf-8')
+    #payload = request.data.decode('utf-8')
+    payload = request.json
     print(f"payload={payload}")
     response_json = AccountApi.create(payload, system_account_id)
     return jsonify(response_json)
 
-@api_bp.route('/account/search/', methods=['POST'])
+@api_bp.route('/account/search', methods=['POST'])
 def searchAccount():
-    print("searchAccount")
-    payload = request.data.decode('utf-8')
+    #payload = request.data.decode('utf-8')
+    payload = request.json
     print(f"payload={payload}")
     response_json = AccountApi.search(payload, system_account_id)
     return jsonify(response_json)

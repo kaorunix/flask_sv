@@ -4,6 +4,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from model import Status
 import sqlalchemy
+from model.common import strftime
+from model.common import strptime
 #from sqlalch
 
 import datetime
@@ -28,10 +30,10 @@ class Account(Base):
     account_name = Column(String())
     start_on = Column(Timestamp)
     end_on = Column(Timestamp)
-    created_by = Column(Integer)
-    created_at = Column(Timestamp)
-    updated_by = Column(Integer)
-    updated_at = Column(Timestamp)
+    created_by = Column(Integer, nullable=True)
+    created_at = Column(Timestamp, nullable=True)
+    updated_by = Column(Integer, nullable=True)
+    updated_at = Column(Timestamp, nullable=True)
     status = Column(Integer)
 
     # get Dict data
@@ -63,14 +65,14 @@ class Account(Base):
     def toJson(self):
         return {
             "name": "account",
-            "id" : self.account_id,
+            "id" : str(self.id),
             "account_name" : self.account_name,
-            "start_on" : self.start_on, 
-            "end_on" : self.end_on,
-            "created_by" : self.created_by,
-            "created_at" : self.created_at, 
-            "updated_by" : self.updated_by,
-            "updated_at" : self.updated_at,
+            "start_on" : strftime(self.start_on), 
+            "end_on" : strftime(self.end_on),
+            "created_by" : str(self.created_by),
+            "created_at" : strftime(self.created_at), 
+            "updated_by" : str(self.updated_by),
+            "updated_at" : strftime(self.updated_at),
             "status" : Status.getStatusName(str(self.status))
         }
     
@@ -110,6 +112,27 @@ def getById(account_id, operation_account_id):
     return res
 
 def search(account_dict, operation_account_id):
+    """
+    dictアカウントからaccountテーブルを検索し、該当したAccountオブジェクト群を取得する
+
+    Parameters
+    ----------
+    {
+        'account_name' : 文字列str(self.account_name),
+        'start_on' : 文字列 '2020-05-01 00:00:00',
+        'end_on' : 文字列 '2020-12-31 00:00:00',
+        'created_by' : account_id,
+        'created_at' : 文字列 '2020-12-31 00:00:00',
+        'updated_by' : account_id,
+        'updated_at' : 文字列 '2020-12-31 00:00:00',
+        'status' : statusの数値
+    }
+
+    Returns
+    -------
+    Accountオブジェクトのリスト
+    """
+    print(f"account_dict={account_dict}")
     Session = sessionmaker(bind=engine)
     ses = Session()
     res = None
@@ -140,40 +163,10 @@ def search(account_dict, operation_account_id):
         rs = rs.filter(Account.status==v)
 
     res = rs.all()
-
+    print(f"res={res}")
     ses.close()
     return res
             
-
-        #v = account_dict.get('account_name')
-#    if (v != None):
-#        rs = work_query.filter(Account.account_name==v)
-#    v = account_dict.get('start_on')
-#    if (v != None):
-#        work_query = work_query.filter(Account.start_on==v)
-#    v = account_dict.get('end_on')
-#    if (v != None):
-#        work_query = work_query.filter(Account.end_on==v)
-#    v = account_dict.get('created_by')
-#    if (v != None):
-#        work_query = work_query.filter(Account.created_by==v)
-#    v = account_dict.get('created_at')
-#    if (v != None):
-#        work_query = work_query.filter(Account.created_at==v)
-#    v = account_dict.get('updated_at')
-#    if (v != None):
-#        work_query = work_query.filter(Account.updated_at==v)
-#    v = account_dict.get('updated_by')
-#    if (v != None):
-#        work_query = work_query.filter(Account.updated_by==v)
-#    v = account_dict.get('status')
-#    if (v != None):
-#        work_query = work_query.filter(Account.status==v)
-#    res = work_query.all()
-#    ses.close()
-#    return res
-    
-
 def create(account_dict, operation_account_id):
     account = Account()
     account.account_name = account_dict['account_name']
@@ -198,11 +191,33 @@ def create(account_dict, operation_account_id):
         ses.close()
     return res
 
-def update(account, operation_account_id):
-    id = account['id']
-    account_name = account['account_name']
-    start_on = account['start_on']
-    end_on = account['end_on']
-    updated_by = operation_account_id
-    updated_at = datetime.datetime.now()
+def update(account_dict, operation_account_id):
+    account_id = account_dict.get('id')
+    Session = sessionmaker(bind=engine)
+    res=False
+    ses = Session()
+    account_record = ses.query(Account).get(account_id)
+    try:
+        v = account_dict.get('account_name')
+        if (v != None):
+            account_record.account_name=v
+        v = account_dict.get('start_on')
+        if (v != None):
+            account_record.start_on=v
+        v = account_dict.get('end_on')
+        if (v != None):
+            account_record.end_on=v
+        account_record.updated_by=operation_account_id
+        account_record.updated_at=str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        v = account_dict.get('status')
+        if (v != None):
+            account_record.status=v
+        ses.commit()
+        res = True
+    except:
+        ses.rollback()
+        res = False
+    finally:
+        ses.close()
+    return res    
     
