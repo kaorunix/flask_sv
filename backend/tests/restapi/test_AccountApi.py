@@ -7,6 +7,7 @@ import pprint
 import datetime
 import ujson
 import requests
+import pytest
 
 def test_getById():
     """
@@ -63,7 +64,7 @@ def test_account_get():
 
     # BODYをjsonでパースできること
     data = json.loads(response.text)
-
+    print(f"test_account_get():data json={data}")
     # 配列内にurl, state, created_atの要素が存在すること
     assert 'body' in data
     assert 'status' in data
@@ -79,16 +80,65 @@ def test_account_search():
     }
 
     # createのテスト
-    Account.create(account, 999) == True
+    assert Account.create(account, 999) == True
 
-    query = {
+    payload = {
         "account_name":"search_account",
         "start_on":"2021-05-23 00:00:00",
         "end_on":"2030-12-31 00:00:00"
     }
-    result = Account.search(query, 999)
+    #result = Account.search(query, 999)
+
+    # APIから確認
+    url = f"http://localhost:5000/api/account/search"
+    headers = {'Accept-Encoding': 'identity, deflate, compress, gzip',
+               'Accept': '*/*', 'User-Agent': 'flask_sv/0.0.1',
+               'Content-type': 'application/json; charset=utf-8',
+               }
+    response = requests.post(url, headers=headers, json=payload)
+
+    # HTTP Statusコードが200であること
+    assert response.status_code == 200
+
+    print(f"test_account_search():json response.text={response.text}")
+    # BODYをjsonでパースできること
+    data = json.loads(response.text)
+    print(f"test_account_search():json data={data}")
+    assert data['body'][0]['account_name'] == payload["account_name"]
+    assert data['body'][0]['start_on'] == payload["start_on"]
+    assert data['body'][0]['end_on'] == payload["end_on"]
+    assert data['body'][0]['created_by'] == 999
+    assert data['status']['code'] == 'I0001'
+    assert data['status']['message'] == 'Found (1) records.'
+
+def test_account_update():
+    """
+    """
+    account = {
+        'account_name' : "update_account",
+        'start_on' : '2021-05-23 00:00:00',
+        'end_on' : '2030-12-31 00:00:00'
+    }
+
+    # createのテスト
+    Account.create(account, 999) == True
+
+    search_query = {
+        "account_name":"update_account",
+        "start_on":"2021-05-23 00:00:00",
+        "end_on":"2030-12-31 00:00:00"
+    }
+    result = Account.search(search_query, 999)
     assert result[0].account_name == account['account_name']
     
+    update_query = {
+        "account_name":"update_account_modified",
+        "start_on":"2021-05-24 10:00:00",
+        "end_on":"2030-12-31 12:00:00"
+    }
+
+
     assert result[0].start_on.strftime('%Y-%m-%d %H:%M:%S') == account['start_on'] #.strftime('%Y–%m–%d %H:%M:%S')
     assert result[0].end_on.strftime('%Y-%m-%d %H:%M:%S') == account['end_on'] #.strftime('%Y–%m–%d %H:%M:%S')
     assert result[0].created_by == 999
+    

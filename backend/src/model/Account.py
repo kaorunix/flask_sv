@@ -9,7 +9,7 @@ from model.common import strptime
 #from sqlalch
 
 import datetime
-from datetime import datetime
+#from datetime import datetime
 
 from model.db import engine
 from model.db import Base
@@ -52,12 +52,12 @@ class Account(Base):
         return {
             'id' : int(self.id),
             'account_name' : str(self.account_name),
-            'start_on' : str(self.start_on), 
-            'end_on' : str(self.end_on),
+            'start_on' : strptime(self.start_on), 
+            'end_on' : strptime(self.end_on),
             'created_by' : int(self.created_by),
-            'created_at' : str(self.created_at), 
+            'created_at' : strptime(self.created_at), 
             'updated_by' : int(self.updated_by),
-            'updated_at' : str(self.updated_at),
+            'updated_at' : strptime(self.updated_at),
             'status' : Status.getStatusName(str(self.status))
         }
     # datetime.strptime(str(self.start_on), "%Y-%m-%d %H:%M:%S")
@@ -69,9 +69,9 @@ class Account(Base):
             "account_name" : self.account_name,
             "start_on" : strftime(self.start_on), 
             "end_on" : strftime(self.end_on),
-            "created_by" : str(self.created_by),
+            "created_by" : int(self.created_by),
             "created_at" : strftime(self.created_at), 
-            "updated_by" : str(self.updated_by),
+            "updated_by" : int(self.updated_by),
             "updated_at" : strftime(self.updated_at),
             "status" : Status.getStatusName(str(self.status))
         }
@@ -163,7 +163,7 @@ def search(account_dict, operation_account_id):
         rs = rs.filter(Account.status==v)
 
     res = rs.all()
-    print(f"res={res}")
+    lambda r: print(f"r={r}"),res
     ses.close()
     return res
             
@@ -173,9 +173,9 @@ def create(account_dict, operation_account_id):
     account.start_on = account_dict['start_on']
     account.end_on = account_dict['end_on']
     account.created_by = operation_account_id
-    account.created_at = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-    account.updated_by = sqlalchemy.null()
-    account.updated_at = sqlalchemy.null()
+    account.created_at = strftime(datetime.datetime.now())
+    account.updated_by = operation_account_id
+    account.updated_at = strftime(datetime.datetime.now())
     account.status = Status.getStatusKey("NEW")
     Session = sessionmaker(bind=engine)
     ses = Session()
@@ -208,7 +208,7 @@ def update(account_dict, operation_account_id):
         if (v != None):
             account_record.end_on=v
         account_record.updated_by=operation_account_id
-        account_record.updated_at=str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        account_record.updated_at=strftime(datetime.datetime.now())
         v = account_dict.get('status')
         if (v != None):
             account_record.status=v

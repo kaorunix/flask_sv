@@ -77,7 +77,7 @@ def create(account_request, operation_account_id):
     """
 
     print(account_request)
-    account_request = json.loads(account_request)
+    #account_request = json.loads(account_request)
     account = {
         'account_name' : str(account_request['account_name']),
         'start_on' : str(account_request['start_on']),
@@ -86,7 +86,7 @@ def create(account_request, operation_account_id):
     message=""
     code=""
     try:
-        if Account.create(account, operation_account_id) == True:
+        if Account.create(account_request, operation_account_id) == True:
             code="I0001"
             message="Created Account Succesfuly."
         else:
@@ -129,6 +129,7 @@ def search(account_request, user_id):
         異常
     """
 
+    print(f"account_request={account_request}")
     message=""
     code=""
     try:
@@ -140,11 +141,13 @@ def search(account_request, user_id):
     except Exception as e:
         code="E0009"
         message="Search failed: " + e.message
-    
-    resultlist = list(map(lambda s: s.toJson(), results))
-    print(f"resultlist={resultlist}")
+
+    print(results[0].__dict__)
+    #list(map(lambda s: print(f"AccountApi#search {s}"), results[0].__dict__))
+    #print(f"AccountApi:print_list={print_list}")
+    #print(f"resultlist={resultlist}")
     result_json = {
-        "body": [ resultlist ],
+        "body": list(map(lambda s: s.toJson(), results)),
         "status": {
             "code" : code,
             "message" : message,
