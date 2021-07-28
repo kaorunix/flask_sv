@@ -176,14 +176,16 @@ def update(account_request, operation_account_id):
         異常
     """
 
-    print(account_request)
-    account_request = json.loads(account_request)
-    account = {
-        'account_name' : str(account_request['account_name']),
-        'start_on' : str(account_request['start_on']),
-        'end_on' : str(account_request['end_on']),
-        'status' : str(account_request['status'])
-    }
+    print(f"AccountApi#update account_request={account_request}")
+    #account_request = json.loads(account_request)
+    account = convertdict(account_request)
+    #account['account_name']
+    #    'account_name' : str(account_request['account_name']),
+    #    'start_on' : str(account_request['start_on']),
+    #    'end_on' : str(account_request['end_on']),
+    #    'status' : int(account_request['status'])
+    #}
+    print(f"account={account}")
     message=""
     code=""
     try:
@@ -214,6 +216,8 @@ def update(account_request, operation_account_id):
 def convertdict(from_dict):
     print(f"convertdict from_dict={from_dict}")
     target_dict = {}
+    if ('id' in from_dict):
+        target_dict['id'] = int(from_dict['id'])
     if ('account_name' in from_dict):
         target_dict['account_name'] = str(from_dict['account_name'])
     if ('start_on' in from_dict):
@@ -228,7 +232,7 @@ def convertdict(from_dict):
         target_dict['updated_by'] = int(from_dict['updated_by'])
     if ('updated_at' in from_dict):
         target_dict['updated_at'] = strptime(from_dict['updated_at'])
-    if ('statu' in from_dict):
+    if ('status' in from_dict):
         target_dict['status'] = int(from_dict['status'])
     return target_dict
 

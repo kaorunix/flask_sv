@@ -210,6 +210,7 @@ def update(account_dict, operation_account_id):
         account_record.updated_by=operation_account_id
         account_record.updated_at=strftime(datetime.datetime.now())
         v = account_dict.get('status')
+        print(f"Account#update v={v}")
         if (v != None):
             account_record.status=v
         ses.commit()

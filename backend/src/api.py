@@ -27,6 +27,13 @@ def searchAccount():
     response_json = AccountApi.search(payload, system_account_id)
     return jsonify(response_json)
 
+@api_bp.route('/account/update', methods=['POST'])
+def updateAccount():
+    #payload = request.data.decode('utf-8')
+    payload = request.json
+    print(f"payload={payload}")
+    response_json = AccountApi.update(payload, system_account_id)
+    return jsonify(response_json)
 
 
 class Spam(Resource):

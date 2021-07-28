@@ -120,7 +120,7 @@ def test_account_update():
         'end_on' : '2030-12-31 00:00:00'
     }
 
-    # createのテスト
+    # create
     Account.create(account, 999) == True
 
     search_query = {
@@ -130,15 +130,32 @@ def test_account_update():
     }
     result = Account.search(search_query, 999)
     assert result[0].account_name == account['account_name']
-    
-    update_query = {
+    account_id = result[0].id
+    payload = {
+        "id": account_id,
         "account_name":"update_account_modified",
         "start_on":"2021-05-24 10:00:00",
-        "end_on":"2030-12-31 12:00:00"
+        "end_on":"2030-12-31 12:00:00",
+        "status":"2"
     }
 
+    # APIから確認
+    url = f"http://localhost:5000/api/account/update"
+    headers = {'Accept-Encoding': 'identity, deflate, compress, gzip',
+               'Accept': '*/*', 'User-Agent': 'flask_sv/0.0.1',
+               'Content-type': 'application/json; charset=utf-8',
+               }
+    response = requests.post(url, headers=headers, json=payload)
 
-    assert result[0].start_on.strftime('%Y-%m-%d %H:%M:%S') == account['start_on'] #.strftime('%Y–%m–%d %H:%M:%S')
-    assert result[0].end_on.strftime('%Y-%m-%d %H:%M:%S') == account['end_on'] #.strftime('%Y–%m–%d %H:%M:%S')
+    # HTTP Statusコードが200であること
+    assert response.status_code == 200
+
+    search_query = {
+        "account_name":"update_account_modified",
+    }
+    result = Account.search(search_query, 999)
+    assert result[0].start_on.strftime('%Y-%m-%d %H:%M:%S') == payload['start_on'] #.strftime('%Y–%m–%d %H:%M:%S')
+    assert result[0].end_on.strftime('%Y-%m-%d %H:%M:%S') == payload['end_on'] #.strftime('%Y–%m–%d %H:%M:%S')
     assert result[0].created_by == 999
+    assert result[0].status == 2
     
