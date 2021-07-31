@@ -8,6 +8,13 @@ api_bp = Blueprint('api', __name__, url_prefix='/api')
 
 @api_bp.route('/account/get/<id>', methods=['GET'])
 def getAccount(id):
+    # パラメータ mode=lock時は更新ロック
+    # if ("mode" in request.args):
+    #     if (request.args.get("mode", "normal") == "lock"):
+    #         account_json = AccountApi.getById(id, system_account_id, lock=True)
+    #     else:
+    #         account_json = AccountApi.getById(id, system_account_id)
+    # else:
     account_json = AccountApi.getById(id, system_account_id)
     return account_json
 

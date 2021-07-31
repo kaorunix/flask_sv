@@ -158,4 +158,4 @@ def test_account_update():
     assert result[0].end_on.strftime('%Y-%m-%d %H:%M:%S') == payload['end_on'] #.strftime('%Y–%m–%d %H:%M:%S')
     assert result[0].created_by == 999
     assert result[0].status == 2
-    
+

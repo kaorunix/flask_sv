@@ -1,11 +1,12 @@
 from sqlalchemy import create_engine, Column, Integer, String, Time
 from sqlalchemy.dialects.mysql import TIMESTAMP as Timestamp
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 from model import Status
 import sqlalchemy
 from model.common import strftime
 from model.common import strptime
+import time
 #from sqlalch
 
 import datetime
@@ -193,10 +194,12 @@ def create(account_dict, operation_account_id):
 
 def update(account_dict, operation_account_id):
     account_id = account_dict.get('id')
-    Session = sessionmaker(bind=engine)
+    Session = sessionmaker(bind=engine, autocommit=False)
     res=False
     ses = Session()
-    account_record = ses.query(Account).get(account_id)
+    account_record = ses.query(Account).with_for_update().get(account_id)
+    print(f"Account#update account_record={account_record}")
+    message = ""
     try:
         v = account_dict.get('account_name')
         if (v != None):
@@ -210,15 +213,19 @@ def update(account_dict, operation_account_id):
         account_record.updated_by=operation_account_id
         account_record.updated_at=strftime(datetime.datetime.now())
         v = account_dict.get('status')
-        print(f"Account#update v={v}")
         if (v != None):
             account_record.status=v
+        ses.add(account_record)
+        #他のプロセスによるロックを待つ
+        #time.sleep(1)
         ses.commit()
         res = True
-    except:
+    except Exception as e:
+        message = str(e)
+        print(f"Account#update error:{message}")
         ses.rollback()
         res = False
     finally:
         ses.close()
-    return res    
+    return (res, message)    
     

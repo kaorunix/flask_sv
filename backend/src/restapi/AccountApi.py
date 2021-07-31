@@ -177,31 +177,25 @@ def update(account_request, operation_account_id):
     """
 
     print(f"AccountApi#update account_request={account_request}")
-    #account_request = json.loads(account_request)
     account = convertdict(account_request)
-    #account['account_name']
-    #    'account_name' : str(account_request['account_name']),
-    #    'start_on' : str(account_request['start_on']),
-    #    'end_on' : str(account_request['end_on']),
-    #    'status' : int(account_request['status'])
-    #}
-    print(f"account={account}")
+    print(f"AccountApi#update account={account}")
     message=""
     code=""
     try:
-        if Account.update(account, operation_account_id) == True:
+        res = Account.update(account, operation_account_id)
+        print(f"AccountApi#update res={res[0]},{res[1]}")
+        if res[0] == True:
             code="I0001"
             message="Updated Account Succesfuly."
         else:
             code="E0001"
-            message=""
+            message=res[1]
         
-    except:
+    except Exception as e:
+        print(f"AccountApi#update error={e}")
         code="E0009"
         message="Updated failed"
     
-
-#    result = Account.getById(account_id, operation_account_id)
     result_json = {
         "body": "",
         "status": {
