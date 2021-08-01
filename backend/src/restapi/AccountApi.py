@@ -140,7 +140,7 @@ def search(account_request, user_id):
         
     except Exception as e:
         code="E0009"
-        message="Search failed: " + e.message
+        message="Search failed: " + str(e)
 
     print(results[0].__dict__)
     #list(map(lambda s: print(f"AccountApi#search {s}"), results[0].__dict__))
@@ -226,13 +226,10 @@ def delete(account_id, operation_account_id):
     """
 
     print(f"AccountApi#delete account_id={account_id}")
-    #account = convertdict(account_request)
-    #print(f"AccountApi#update account={account}")
     message=""
     code=""
     try:
         res = Account.delete(account_id, operation_account_id)
-        print(f"AccountApi#delete res")
         if res[0] == True:
             code="I0001"
             message="deleted Account Succesfuly."
@@ -241,9 +238,8 @@ def delete(account_id, operation_account_id):
             message=res[1]
         
     except Exception as e:
-        print(f"AccountApi#update error={e}")
         code="E0009"
-        message="Deleted failed"
+        message=f"Deleted failed:{str(e)}"
     
     result_json = {
         "body": "",

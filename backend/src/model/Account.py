@@ -163,6 +163,7 @@ def search(account_dict, operation_account_id):
     v = account_dict.get('status')
     if (v != None):
         rs = rs.filter(Account.status==v)
+    rs = rs.filter(Account.status!=Status.getStatusKey("DELETE"))
 
     res = rs.all()
     lambda r: print(f"r={r}"),res
@@ -231,7 +232,7 @@ def update(account_dict, operation_account_id):
     return (res, message)    
 
 
-def deleteById(account_id, operation_account_id):
+def delete(account_id, operation_account_id):
     Session = sessionmaker(bind=engine, autocommit=False)
     ses = Session()
     account_record = ses.query(Account).with_for_update().get(account_id)
