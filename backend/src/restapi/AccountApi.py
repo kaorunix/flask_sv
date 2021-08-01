@@ -207,6 +207,55 @@ def update(account_request, operation_account_id):
     ret = result_json
     return ret
 
+def delete(account_id, operation_account_id):
+    """
+    /account/deleteで呼び出されたAPIの検索処理
+
+    Parameters
+    ----------
+    account_id : int
+        削除するアカウントID
+    operation_account_id : int
+        Webアプリケーション操作アカウントのID
+
+    Returns
+    -------
+    JSON形式の処理結果
+        正常
+        異常
+    """
+
+    print(f"AccountApi#delete account_id={account_id}")
+    #account = convertdict(account_request)
+    #print(f"AccountApi#update account={account}")
+    message=""
+    code=""
+    try:
+        res = Account.delete(account_id, operation_account_id)
+        print(f"AccountApi#delete res")
+        if res[0] == True:
+            code="I0001"
+            message="deleted Account Succesfuly."
+        else:
+            code="E0001"
+            message=res[1]
+        
+    except Exception as e:
+        print(f"AccountApi#update error={e}")
+        code="E0009"
+        message="Deleted failed"
+    
+    result_json = {
+        "body": "",
+        "status": {
+            "code" : code,
+            "message" : message,
+            "detail" : ""
+        }
+    }
+    ret = result_json
+    return ret
+
 def convertdict(from_dict):
     print(f"convertdict from_dict={from_dict}")
     target_dict = {}

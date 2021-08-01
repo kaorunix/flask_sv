@@ -159,3 +159,44 @@ def test_account_update():
     assert result[0].created_by == 999
     assert result[0].status == 2
 
+
+def test_account_delete():
+    """
+    """
+    account = {
+        'account_name' : "delete_account",
+        'start_on' : '2021-05-23 00:00:00',
+        'end_on' : '2030-12-31 00:00:00'
+    }
+
+    # create
+    Account.create(account, 999) == True
+
+    search_query = {
+        "account_name":"delete_account",
+        "start_on":"2021-05-23 00:00:00",
+        "end_on":"2030-12-31 00:00:00"
+    }
+    result = Account.search(search_query, 999)
+    assert result[0].account_name == account['account_name']
+    account_id = result[0].id
+
+    # APIから確認
+    url = f"http://localhost:5000/api/account/delete/{account_id}"
+    headers = {'Accept-Encoding': 'identity, deflate, compress, gzip',
+               'Accept': '*/*', 'User-Agent': 'flask_sv/0.0.1',
+               'Content-type': 'application/json; charset=utf-8',
+               }
+    response = requests.get(url, headers=headers)
+
+    # HTTP Statusコードが200であること
+    assert response.status_code == 200
+
+    data = json.loads(response.text)
+    print(f"test_AccountApi#test_account_delete data={data}")
+    #[0].start_on.strftime('%Y-%m-%d %H:%M:%S') == payload['start_on'] #.strftime('%Y–%m–%d %H:%M:%S')
+    #assert result[0].end_on.strftime('%Y-%m-%d %H:%M:%S') == payload['end_on'] #.strftime('%Y–%m–%d %H:%M:%S')
+    #assert result[0].created_by == 999
+    #assert result[0].status == 2
+
+    

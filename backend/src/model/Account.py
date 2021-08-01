@@ -7,6 +7,7 @@ import sqlalchemy
 from model.common import strftime
 from model.common import strptime
 import time
+import model.Status
 #from sqlalch
 
 import datetime
@@ -228,4 +229,27 @@ def update(account_dict, operation_account_id):
     finally:
         ses.close()
     return (res, message)    
-    
+
+
+def deleteById(account_id, operation_account_id):
+    Session = sessionmaker(bind=engine, autocommit=False)
+    ses = Session()
+    account_record = ses.query(Account).with_for_update().get(account_id)
+    print(f"Account#deleteById account_id={account_id}")
+    message = ""
+    try:
+        account_record.status=Status.getStatusKey("DELETE")
+        ses.add(account_record)
+        #他のプロセスによるロックを待つ
+        #time.sleep(1)
+        ses.commit()
+        res = True
+    except Exception as e:
+        message = str(e)
+        print(f"Account#update error:{message}")
+        ses.rollback()
+        res = False
+    finally:
+        ses.close()
+    return (res, message)    
+

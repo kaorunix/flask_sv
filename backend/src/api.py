@@ -42,6 +42,10 @@ def updateAccount():
     response_json = AccountApi.update(payload, system_account_id)
     return jsonify(response_json)
 
+@api_bp.route('/account/delete/<id>', methods=['GET'])
+def deleteAccount(id):
+    account_json = AccountApi.delete(id, system_account_id)
+    return jsonify(account_json)
 
 class Spam(Resource):
     def get(self):
