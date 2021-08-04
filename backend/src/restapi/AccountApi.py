@@ -74,8 +74,6 @@ def create(account_request, operation_account_id):
         異常
     """
 
-    print(account_request)
-    #account_request = json.loads(account_request)
     account = {
         'account_name' : str(account_request['account_name']),
         'start_on' : str(account_request['start_on']),
@@ -101,7 +99,6 @@ def create(account_request, operation_account_id):
         message="Created failed"
     
 
-#    result = Account.getById(account_id, operation_account_id)
     result_json = {
         "body": "",
         "status": {
@@ -110,8 +107,7 @@ def create(account_request, operation_account_id):
             "detail" : ""
         }
     }
-    ret = result_json
-    return ret
+    return result_json
 
 
 def search(account_request, user_id):
