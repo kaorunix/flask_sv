@@ -79,9 +79,9 @@ def create(account_request, operation_account_id):
         'start_on' : str(account_request['start_on']),
         'end_on' : str(account_request['end_on']),
         'created_by' : operation_account_id,
-        'created_at' : strftime(datetime.datetime.now()),
+        'created_at' : datetime.datetime.now(),
         'updated_by' : operation_account_id,
-        'updated_at' : strftime(datetime.datetime.now()),
+        'updated_at' : datetime.datetime.now(),
         'status' :  Status.getStatusKey("NEW")
     }
     message=""

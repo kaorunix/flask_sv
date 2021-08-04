@@ -20,9 +20,9 @@ def test_getById():
         'start_on' : '2021-05-05 00:00:00',
         'end_on' : '2030-12-31 00:00:00',
         'created_by' : 999,
-        'created_at' : strftime(datetime.datetime.now()),
+        'created_at' : datetime.datetime.now(),
         'updated_by' : 999,
-        'updated_at' : strftime(datetime.datetime.now()),
+        'updated_at' : datetime.datetime.now(),
         'status' :  Status.getStatusKey("NEW")
     }
 
@@ -60,9 +60,9 @@ def test_account_get():
         'start_on' : '2021-06-23 00:00:00',
         'end_on' : '2030-12-31 00:00:00',
         'created_by' : 999,
-        'created_at' : strftime(datetime.datetime.now()),
+        'created_at' : datetime.datetime.now(),
         'updated_by' : 999,
-        'updated_at' : strftime(datetime.datetime.now()),
+        'updated_at' : datetime.datetime.now(),
         'status' :  Status.getStatusKey("NEW")
     }
 
@@ -101,9 +101,9 @@ def test_account_search():
         'start_on' : '2021-05-23 00:00:00',
         'end_on' : '2030-12-31 00:00:00',
         'created_by' : 999,
-        'created_at' : strftime(datetime.datetime.now()),
+        'created_at' : datetime.datetime.now(),
         'updated_by' : 999,
-        'updated_at' : strftime(datetime.datetime.now()),
+        'updated_at' : datetime.datetime.now(),
         'status' :  Status.getStatusKey("NEW")
     }
 
@@ -147,9 +147,9 @@ def test_account_update():
         'start_on' : '2021-05-23 00:00:00',
         'end_on' : '2030-12-31 00:00:00',
         'created_by' : 999,
-        'created_at' : strftime(datetime.datetime.now()),
+        'created_at' : datetime.datetime.now(),
         'updated_by' : 999,
-        'updated_at' : strftime(datetime.datetime.now()),
+        'updated_at' : datetime.datetime.now(),
         'status' :  Status.getStatusKey("NEW")
     }
 
@@ -201,9 +201,9 @@ def test_account_delete():
         'start_on' : '2021-05-23 00:00:00',
         'end_on' : '2030-12-31 00:00:00',
         'created_by' : 999,
-        'created_at' : strftime(datetime.datetime.now()),
+        'created_at' : datetime.datetime.now(),
         'updated_by' : 999,
-        'updated_at' : strftime(datetime.datetime.now()),
+        'updated_at' : datetime.datetime.now(),
         'status' :  Status.getStatusKey("NEW")
     }
 
