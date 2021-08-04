@@ -85,7 +85,7 @@ def test_update():
         'end_on' : '2031-01-01 00:00:00',
         'status' : results[0].status + 1
     }
-    assert Account.update(account_update, 999) == True
+    assert Account.update(account_update, 999)[0] == True
     result = Account.getById(account_id, 999)
     assert result.account_name == account_update['account_name']
     assert result.start_on == datetime.datetime.strptime(account_update['start_on'], '%Y-%m-%d %H:%M:%S')

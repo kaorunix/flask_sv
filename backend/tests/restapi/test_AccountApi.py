@@ -8,6 +8,8 @@ import datetime
 import ujson
 import requests
 import pytest
+from model.common import strftime
+from model.common import strptime
 
 def test_getById():
     """
@@ -16,7 +18,12 @@ def test_getById():
     account = {
         'account_name' : 'flask_sv',
         'start_on' : '2021-05-05 00:00:00',
-        'end_on' : '2030-12-31 00:00:00'
+        'end_on' : '2030-12-31 00:00:00',
+        'created_by' : 999,
+        'created_at' : strftime(datetime.datetime.now()),
+        'updated_by' : 999,
+        'updated_at' : strftime(datetime.datetime.now()),
+        'status' :  Status.getStatusKey("NEW")
     }
 
     Account.create(account, 999) == True
@@ -30,8 +37,19 @@ def test_getById():
     result_json = AccountApi.getById(result_id, 100)
     print(f"json: {AccountApi.getById(result_id, 100)}")
 
-    assert result_json == """{"body": {"name": "account", "id": """+str(result_id)+""", "account_name": "flask_sv", "start_on": "2021-05-05 00:00:00", "end_on": "2030-12-31 00:00:00"}, "status": {"code": "I0001", "message": "", "detail": ""}}"""
+    #assert result_json == """{"body": {"name": "account", "id": """+str(result_id)+""", "account_name": "flask_sv", "start_on": "2021-05-05 00:00:00", "end_on": "2030-12-31 00:00:00"}, "status": {"code": "I0001", "message": "", "detail": ""}}"""
 
+    assert result_json['body']['name'] == "account"
+    assert result_json['body']['account_name'] == "flask_sv"
+    assert result_json['body']['start_on'] == "2021-05-05 00:00:00"
+    assert result_json['body']['end_on'] == "2030-12-31 00:00:00"
+    assert result_json['status']['code'] == "I0001"
+    #assert result_json['status']['message'] == "2030-12-31 00:00:00"
+    
+
+    #"""{"body": {"name": "account", "id": """+str(result_id)+""", "account_name": "flask_sv", "start_on": "2021-05-05 00:00:00", "end_on": "2030-12-31 00:00:00"}, "status": {"code": "I0001", "message": "", "detail": ""}}"""
+
+    
 def test_account_get():
     """
     """
@@ -40,7 +58,12 @@ def test_account_get():
     account = {
         'account_name' : test_account_name,
         'start_on' : '2021-06-23 00:00:00',
-        'end_on' : '2030-12-31 00:00:00'
+        'end_on' : '2030-12-31 00:00:00',
+        'created_by' : 999,
+        'created_at' : strftime(datetime.datetime.now()),
+        'updated_by' : 999,
+        'updated_at' : strftime(datetime.datetime.now()),
+        'status' :  Status.getStatusKey("NEW")
     }
 
     # createのテスト
@@ -76,7 +99,12 @@ def test_account_search():
     account = {
         'account_name' : "search_account",
         'start_on' : '2021-05-23 00:00:00',
-        'end_on' : '2030-12-31 00:00:00'
+        'end_on' : '2030-12-31 00:00:00',
+        'created_by' : 999,
+        'created_at' : strftime(datetime.datetime.now()),
+        'updated_by' : 999,
+        'updated_at' : strftime(datetime.datetime.now()),
+        'status' :  Status.getStatusKey("NEW")
     }
 
     # createのテスト
@@ -117,7 +145,12 @@ def test_account_update():
     account = {
         'account_name' : "update_account",
         'start_on' : '2021-05-23 00:00:00',
-        'end_on' : '2030-12-31 00:00:00'
+        'end_on' : '2030-12-31 00:00:00',
+        'created_by' : 999,
+        'created_at' : strftime(datetime.datetime.now()),
+        'updated_by' : 999,
+        'updated_at' : strftime(datetime.datetime.now()),
+        'status' :  Status.getStatusKey("NEW")
     }
 
     # create
@@ -166,7 +199,12 @@ def test_account_delete():
     account = {
         'account_name' : "delete_account",
         'start_on' : '2021-05-23 00:00:00',
-        'end_on' : '2030-12-31 00:00:00'
+        'end_on' : '2030-12-31 00:00:00',
+        'created_by' : 999,
+        'created_at' : strftime(datetime.datetime.now()),
+        'updated_by' : 999,
+        'updated_at' : strftime(datetime.datetime.now()),
+        'status' :  Status.getStatusKey("NEW")
     }
 
     # create

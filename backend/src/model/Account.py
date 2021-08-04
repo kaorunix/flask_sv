@@ -175,11 +175,11 @@ def create(account_dict, operation_account_id):
     account.account_name = account_dict['account_name']
     account.start_on = account_dict['start_on']
     account.end_on = account_dict['end_on']
-    account.created_by = operation_account_id
-    account.created_at = strftime(datetime.datetime.now())
-    account.updated_by = operation_account_id
-    account.updated_at = strftime(datetime.datetime.now())
-    account.status = Status.getStatusKey("NEW")
+    account.created_by = account_dict['created_by']
+    account.created_at = account_dict['created_at']
+    account.updated_by = account_dict['updated_by']
+    account.updated_at = account_dict['updated_at']
+    account.status = account_dict['status']
     Session = sessionmaker(bind=engine)
     ses = Session()
     ses.begin()

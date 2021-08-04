@@ -54,9 +54,7 @@ def getById(account_id, operation_account_id):
             "detail" : ""
         }
     }
-    ret = json.dumps(result_json)
-    return ret
-
+    return result_json
 
 def create(account_request, operation_account_id):
     """
@@ -81,7 +79,12 @@ def create(account_request, operation_account_id):
     account = {
         'account_name' : str(account_request['account_name']),
         'start_on' : str(account_request['start_on']),
-        'end_on' : str(account_request['end_on'])
+        'end_on' : str(account_request['end_on']),
+        'created_by' : operation_account_id,
+        'created_at' : strftime(datetime.datetime.now()),
+        'updated_by' : operation_account_id,
+        'updated_at' : strftime(datetime.datetime.now()),
+        'status' :  Status.getStatusKey("NEW")
     }
     message=""
     code=""
