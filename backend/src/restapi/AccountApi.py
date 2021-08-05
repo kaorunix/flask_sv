@@ -84,8 +84,7 @@ def create(account_request, operation_account_id):
         'updated_at' : datetime.datetime.now(),
         'status' :  Status.getStatusKey("NEW")
     }
-    message=""
-    code=""
+
     try:
         if Account.create(account_request, operation_account_id) == True:
             code="I0001"
@@ -110,7 +109,7 @@ def create(account_request, operation_account_id):
     return result_json
 
 
-def search(account_request, user_id):
+def search(request, user_id):
     """
     /account/searchで呼び出されたAPIの検索処理
 
@@ -128,7 +127,7 @@ def search(account_request, user_id):
         異常
     """
 
-    print(f"account_request={account_request}")
+    account_request = convertdict(request)
     message=""
     code=""
     try:
