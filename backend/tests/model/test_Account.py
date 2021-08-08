@@ -13,7 +13,12 @@ def test_getById():
     account = {
         'account_name' : 'flask_sv',
         'start_on' : '2021-05-05 00:00:00',
-        'end_on' : '2030-12-31 00:00:00'
+        'end_on' : '2030-12-31 00:00:00',
+        'created_by' : 999,
+        'created_at' : datetime.datetime.now(),
+        'updated_by' : 999,
+        'updated_at' : datetime.datetime.now(),
+        'status' :  Status.getStatusKey("NEW")
     }
 
     Account.create(account, 999) == True
@@ -46,6 +51,11 @@ def test_create():
         'account_name' : 'flask_sv2',
         'start_on' : '2021-05-05 00:00:00',
         'end_on' : '2030-12-31 00:00:00',
+        'created_by' : 999,
+        'created_at' : datetime.datetime.now(),
+        'updated_by' : 999,
+        'updated_at' : datetime.datetime.now(),
+        'status' :  Status.getStatusKey("NEW")
     }
 
     assert Account.create(account, 999) == True
@@ -68,6 +78,11 @@ def test_update():
         'account_name' : 'flask_sv3',
         'start_on' : '2021-05-05 00:00:00',
         'end_on' : '2030-12-31 00:00:00',
+        'created_by' : 999,
+        'created_at' : datetime.datetime.now(),
+        'updated_by' : 999,
+        'updated_at' : datetime.datetime.now(),
+        'status' :  Status.getStatusKey("NEW")
     }
 
     assert Account.create(account, 999) == True

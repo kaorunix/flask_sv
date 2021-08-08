@@ -128,22 +128,15 @@ def search(request, user_id):
     """
 
     account_request = convertdict(request)
-    message=""
-    code=""
     try:
         results = Account.search(account_request, user_id)
         code="I0001"
-        
         message=f"Found ({len(results)}) records."
         
     except Exception as e:
         code="E0009"
         message="Search failed: " + str(e)
 
-    print(results[0].__dict__)
-    #list(map(lambda s: print(f"AccountApi#search {s}"), results[0].__dict__))
-    #print(f"AccountApi:print_list={print_list}")
-    #print(f"resultlist={resultlist}")
     result_json = {
         "body": list(map(lambda s: s.toJson(), results)),
         "status": {
@@ -152,9 +145,7 @@ def search(request, user_id):
             "detail" : ""
         }
     }
-    print(f"result_json={result_json}")
-    ret = result_json
-    return ret
+    return result_json
 
 def update(account_request, operation_account_id):
     """
@@ -174,11 +165,7 @@ def update(account_request, operation_account_id):
         異常
     """
 
-    print(f"AccountApi#update account_request={account_request}")
     account = convertdict(account_request)
-    print(f"AccountApi#update account={account}")
-    message=""
-    code=""
     try:
         res = Account.update(account, operation_account_id)
         print(f"AccountApi#update res={res[0]},{res[1]}")
@@ -190,9 +177,8 @@ def update(account_request, operation_account_id):
             message=res[1]
         
     except Exception as e:
-        print(f"AccountApi#update error={e}")
         code="E0009"
-        message="Updated failed"
+        message=f"Updated failed {e}"
     
     result_json = {
         "body": "",
@@ -202,8 +188,7 @@ def update(account_request, operation_account_id):
             "detail" : ""
         }
     }
-    ret = result_json
-    return ret
+    return result_json
 
 def delete(account_id, operation_account_id):
     """
