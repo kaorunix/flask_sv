@@ -1,4 +1,5 @@
 from model import Account
+from model import Status
 #from __future__ import absolute_import, unicode_literals 
 import json
 import datetime
@@ -39,7 +40,7 @@ def getById(account_id, operation_account_id):
     """
     
     result = Account.getById(account_id, operation_account_id)
-    # TODO モデルの検索結果(正常・異常)によってレスポンスの出力内容を替える
+    # TODO モデルの検索結果(正常・異常)によってレスポンスの出力内容を変える
     result_json = {
         "body": {
             "name": "account",
@@ -86,7 +87,7 @@ def create(account_request, operation_account_id):
     }
 
     try:
-        if Account.create(account_request, operation_account_id) == True:
+        if Account.create(account, operation_account_id) == True:
             code="I0001"
             message="Created Account Succesfuly."
         else:
@@ -208,9 +209,6 @@ def delete(account_id, operation_account_id):
         異常
     """
 
-    print(f"AccountApi#delete account_id={account_id}")
-    message=""
-    code=""
     try:
         res = Account.delete(account_id, operation_account_id)
         if res[0] == True:
@@ -232,8 +230,7 @@ def delete(account_id, operation_account_id):
             "detail" : ""
         }
     }
-    ret = result_json
-    return ret
+    return result_json
 
 def convertdict(from_dict):
     print(f"convertdict from_dict={from_dict}")

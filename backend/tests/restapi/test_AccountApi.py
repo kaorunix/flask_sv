@@ -11,7 +11,7 @@ import pytest
 from model.common import strftime
 from model.common import strptime
 
-def test_getById():
+def test_account_get():
     """
     restapi/getById
     """
@@ -33,46 +33,6 @@ def test_getById():
         'end_on' : "2030-12-31 00:00:00"
     }
     result = Account.search(account_dict, 1)
-    result_id = result[0].id
-    result_json = AccountApi.getById(result_id, 100)
-    print(f"json: {AccountApi.getById(result_id, 100)}")
-
-    #assert result_json == """{"body": {"name": "account", "id": """+str(result_id)+""", "account_name": "flask_sv", "start_on": "2021-05-05 00:00:00", "end_on": "2030-12-31 00:00:00"}, "status": {"code": "I0001", "message": "", "detail": ""}}"""
-
-    assert result_json['body']['name'] == "account"
-    assert result_json['body']['account_name'] == "flask_sv"
-    assert result_json['body']['start_on'] == "2021-05-05 00:00:00"
-    assert result_json['body']['end_on'] == "2030-12-31 00:00:00"
-    assert result_json['status']['code'] == "I0001"
-    #assert result_json['status']['message'] == "2030-12-31 00:00:00"
-    
-
-    #"""{"body": {"name": "account", "id": """+str(result_id)+""", "account_name": "flask_sv", "start_on": "2021-05-05 00:00:00", "end_on": "2030-12-31 00:00:00"}, "status": {"code": "I0001", "message": "", "detail": ""}}"""
-
-    
-def test_account_get():
-    """
-    """
-    # modelから試験データ登録
-    test_account_name = 'api_account_get'
-    account = {
-        'account_name' : test_account_name,
-        'start_on' : '2021-06-23 00:00:00',
-        'end_on' : '2030-12-31 00:00:00',
-        'created_by' : 999,
-        'created_at' : datetime.datetime.now(),
-        'updated_by' : 999,
-        'updated_at' : datetime.datetime.now(),
-        'status' :  Status.getStatusKey("NEW")
-    }
-
-    # createのテスト
-    assert Account.create(account, 999) == True
-
-    account_dict = {
-        'account_name' : test_account_name
-    }
-    result = Account.search(account_dict, 999)
     account_id = result[0].id
 
     # APIから確認
@@ -82,15 +42,61 @@ def test_account_get():
                'Content-type': 'application/json; charset=utf-8',
                }
     response = requests.get(url, headers=headers)
-    # HTTP Statusコードが200であること
+
     assert response.status_code == 200
 
-    # BODYをjsonでパースできること
     data = json.loads(response.text)
-    print(f"test_account_get():data json={data}")
-    # 配列内にurl, state, created_atの要素が存在すること
-    assert 'body' in data
-    assert 'status' in data
+    assert data['body']['name'] == "account"
+    assert data['body']['account_name'] == "flask_sv"
+    assert data['body']['start_on'] == "2021-05-05 00:00:00"
+    assert data['body']['end_on'] == "2030-12-31 00:00:00"
+    assert data['status']['code'] == "I0001"
+    assert data['status']['message'] == ""
+    
+
+def test_account_create():
+    """
+    """
+    # modelから試験データ登録
+    test_account_name = 'api_account_get'
+    test_start_on = '2021-06-23 00:00:00'
+    test_end_on = '2030-12-31 00:00:00'
+    payload = {
+        'account_name' : test_account_name,
+        'start_on' : test_start_on,
+        'end_on' : test_end_on
+    }
+
+    # createのテスト
+    # APIの実行
+    url = f"http://localhost:5000/api/account/create"
+    headers = {'Accept-Encoding': 'identity, deflate, compress, gzip',
+               'Accept': '*/*', 'User-Agent': 'flask_sv/0.0.1',
+               'Content-type': 'application/json; charset=utf-8',
+               }
+    response = requests.post(url, headers=headers, json=payload)
+
+    assert response.status_code == 200
+    data = json.loads(response.text)
+    assert data['body'] == ""
+    assert data['status']['code'] == "I0001" 
+    assert data['status']['message'] == "Created Account Succesfuly." 
+
+    # 作成されたデータの確認
+    account_dict = {
+        'account_name' : test_account_name
+    }
+    result = Account.search(account_dict, 999)
+    account_id = result[0].id
+
+    result_json = AccountApi.getById(account_id, 100)
+
+    assert result_json['body']['name'] == "account"
+    assert result_json['body']['account_name'] == test_account_name
+    assert result_json['body']['start_on'] == test_start_on
+    assert result_json['body']['end_on'] == test_end_on
+    assert result_json['status']['code'] == "I0001"
+    assert result_json['status']['message'] == ""
 
 
 def test_account_search():
@@ -182,6 +188,10 @@ def test_account_update():
 
     # HTTP Statusコードが200であること
     assert response.status_code == 200
+    data = json.loads(response.text)
+    assert data['body'] == ""
+    assert data['status']['code'] == "I0001"
+    assert data['status']['message'] == "Updated Account Succesfuly."
 
     search_query = {
         "account_name":"update_account_modified",
@@ -231,10 +241,9 @@ def test_account_delete():
     assert response.status_code == 200
 
     data = json.loads(response.text)
-    print(f"test_AccountApi#test_account_delete data={data}")
-    #[0].start_on.strftime('%Y-%m-%d %H:%M:%S') == payload['start_on'] #.strftime('%Y–%m–%d %H:%M:%S')
-    #assert result[0].end_on.strftime('%Y-%m-%d %H:%M:%S') == payload['end_on'] #.strftime('%Y–%m–%d %H:%M:%S')
-    #assert result[0].created_by == 999
-    #assert result[0].status == 2
+    print(f"test_AccountApi#test_account_delete data={data} code={data['status']['code']} message={data['status']['message']}")
+    assert data['body'] == ""
+    assert data['status']['code'] == "I0001"
+    assert data['status']['message'] == "deleted Account Succesfuly."
 
     
