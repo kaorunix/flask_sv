@@ -4,29 +4,35 @@
 
 |Field|Type|Null|Key|Default|Extra|
 |:--|:--|:--|:--|:--|:--|
-|heading（タスク見出し）|text|NO|PRI|NULL|| 
+|task_id（タスクID）|int|NO|PRI|NULL||
+|heading（タスク見出し）|text|NO||NULL|| 
 |contents（タスク内容）|text|NO||NULL||
 |deadline（期日）|datetime|NO||NULL||
 |man_hours（工数）|int|NO||NULL||
 |start_on（開始日）|datetime|YES||NULL||
 |end_on（終了日）|datetime|YES||NULL||
-|account_name（担当者）|varchar(64)|NO||NULL||
-|status（進行状況）|datetime|YES||NULL||
-|deliverable（成果物）|text|NO||NULL||
+|status（進行状況）|int|YES||NULL|0=未着手 1=進行中 2=完了|
+|account_id（担当者）|varchar(64)|NO||NULL||
+|project_id（プロジェクト）|int|NO||NULL||
+|sprint_id（スプリント）|int|NO||NULL||
+|story_id（ストーリー）|int|NO||NULL||
 
 ```
 DROP TABLE IF EXISTS `task`;
 CREATE TABLE `task` (
+  `task_id` int NOT NULL,
   `heading` text NOT NULL ,
   `contents` text NOT NULL ,
   `deadline` datetime NOT NULL,
   `man_hours` int NOT NULL,
   `start_on` datetime DEFAULT NULL,
   `end_on` datetime DEFAULT NULL,
-  `account_name` varchar(64) NOT NULL,
-  `status` datetime DEFAULT NULL,
-  `deliverable` text NOT NULL,
-  PRIMARY KEY (`heading`)
+  `status` int DEFAULT NULL,
+  `account_id` varchar(64) NOT NULL,
+  `progect_id` int NOT NULL,
+  `sprint_id` int NOT NULL,
+  `story_id` int NOT NULL,
+  PRIMARY KEY (`task_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ```
 
@@ -51,10 +57,15 @@ GETのためなし
 ```request
 {
   "body": {
+     "task_id": <task_id>,
      "heading": <heading>,
      "contents": <contents>,
      "deadline": <deadline>,
-     "account_name": <account_name>
+     "account_id": <account_id>,
+     "man_hours": <man_hours>,
+     "start_on": <start_on>,
+     "status": <status>,
+     "account_id": <account_id>,
   }
 }
 ```
@@ -88,6 +99,12 @@ POST
 
 ```
 {
-  "message": "Completed successfully"
+  "body" : "",
+  "status": {
+    "code" : "I0001",
+    "message" : "account {} was created.",
+    "detail" : ""
+  }
 }
+
 ```
