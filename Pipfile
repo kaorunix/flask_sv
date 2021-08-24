@@ -17,9 +17,7 @@ pymysql = "*"
 pytest = "*"
 ujson = "*"
 requests = "*"
-
-[requires]
-python_version = "3.7"
+flask-cors = "*"
 
 [scripts]
 start = "python backend/main.py"
