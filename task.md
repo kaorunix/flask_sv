@@ -4,7 +4,7 @@
 
 |Field|Type|Null|Key|Default|Extra|
 |:--|:--|:--|:--|:--|:--|
-|task_id（タスクID）|int|NO|PRI|NULL||
+|id（タスクID）|int|NO|PRI|NULL||
 |heading（タスク見出し）|text|NO||NULL|| 
 |contents（タスク内容）|text|NO||NULL||
 |deadline（期日）|datetime|NO||NULL||
@@ -20,7 +20,7 @@
 ```
 DROP TABLE IF EXISTS `task`;
 CREATE TABLE `task` (
-  `task_id` int NOT NULL,
+  `id` int NOT NULL,
   `heading` text NOT NULL ,
   `contents` text NOT NULL ,
   `deadline` datetime NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE `task` (
   `progect_id` int NOT NULL,
   `sprint_id` int NOT NULL,
   `story_id` int NOT NULL,
-  PRIMARY KEY (`task_id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ```
 
@@ -57,7 +57,7 @@ GETのためなし
 ```request
 {
   "body": {
-     "task_id": <task_id>,
+     "id": <id>,
      "heading": <heading>,
      "contents": <contents>,
      "deadline": <deadline>,
@@ -92,7 +92,6 @@ POST
 
 ```
 {   
-    "task_id":
     "heading":
     "contents":
     "deadline":
