@@ -65,6 +65,11 @@ GETのためなし
      "start_on": <start_on>,
      "status": <status>,
      "account_id": <account_id>,
+   },
+  "status": {
+    "code" : "I0001",
+    "message" : "",
+    "detail" : ""
   }
 }
 ```
