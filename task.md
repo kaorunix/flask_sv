@@ -61,7 +61,6 @@ GETのためなし
      "heading": <heading>,
      "contents": <contents>,
      "deadline": <deadline>,
-     "account_id": <account_id>,
      "man_hours": <man_hours>,
      "start_on": <start_on>,
      "status": <status>,
@@ -92,7 +91,8 @@ POST
     "heading":
     "contents":
     "deadline":
-    "start_on"
+    "man_hours":
+    "start_on":
     "account_id":
 }
 ```
