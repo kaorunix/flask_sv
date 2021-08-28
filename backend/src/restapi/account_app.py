@@ -4,9 +4,9 @@ from restapi import AccountApi
 
 system_account_id=999
 
-api_bp = Blueprint('api', __name__, url_prefix='/api')
+account_bp = Blueprint('account_app', __name__, url_prefix='/api/account')
 
-@api_bp.route('/account/get/<id>', methods=['GET'])
+@account_bp.route('/get/<id>', methods=['GET'])
 def getAccount(id):
     account_json = AccountApi.getById(id, system_account_id)
     res = make_response(jsonify(account_json))
@@ -18,7 +18,7 @@ def getAccount(id):
     res.headers['Access-Control-Allow-Credentials'] = "true"
     return res
 
-@api_bp.route('/account/create', methods=['POST'])
+@account_bp.route('/create', methods=['POST'])
 def createAccount():
     payload = request.get_json()
     print(f"api createAccount payload={payload}")
@@ -32,7 +32,7 @@ def createAccount():
     res.headers['Access-Control-Allow-Credentials'] = "true"
     return res
 
-@api_bp.route('/account/search', methods=['POST'])
+@account_bp.route('/search', methods=['POST'])
 def searchAccount():
     print(f"api searchAccount requestjson={request.get_json(force=True)} data={request.form} encode={request.data.decode('utf-8')}")
     payload = request.get_json()
@@ -47,7 +47,7 @@ def searchAccount():
     res.headers['Access-Control-Allow-Credentials'] = "true"
     return res
 
-@api_bp.route('/account/update', methods=['POST'])
+@account_bp.route('/update', methods=['POST'])
 def updateAccount():
     #payload = request.data.decode('utf-8')
     payload = request.json
@@ -55,7 +55,7 @@ def updateAccount():
     response_json = AccountApi.update(payload, system_account_id)
     return jsonify(response_json)
 
-@api_bp.route('/account/delete/<id>', methods=['GET'])
+@account_bp.route('/delete/<id>', methods=['GET'])
 def deleteAccount(id):
     account_json = AccountApi.delete(id, system_account_id)
     return jsonify(account_json)
@@ -64,6 +64,6 @@ class Spam(Resource):
     def get(self):
         return {'id': 42, 'name': 'Name'}
 
-api = Api(api_bp)
+api = Api(account_bp)
 api.add_resource(Spam, '/spam')
 
