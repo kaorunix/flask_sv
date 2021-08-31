@@ -57,9 +57,58 @@ def getById(account_id, operation_account_id):
     }
     return result_json
 
+def getByIdWithLock(account_id, operation_account_id):
+    """
+    /account/lock/<id>で呼び出されたAPIの検索とロック処理
+
+    Parameters
+    ----------
+    account_id : int
+        検索するアカウントのアカウントID
+    operation_account_id : int
+        Webアプリケーション操作アカウントのID
+
+    Returns
+    -------
+    ret
+        json形式のアカウント詳細
+    {
+      "body": {
+        "name": "account",
+        "id": <account_id>,
+        "account_name": <account_name>,
+        "start_on": "2021-01-01 10:00:00",
+        "end_on": "2025-12-31 21:00:00"
+    },
+      "status": {
+        "code" : "I0001",
+        "message" : "",
+        "detail" : ""
+      }
+    }
+    """
+    
+    result = Account.getByIdWithLock(account_id, operation_account_id)
+    # TODO モデルの検索結果(正常・異常)によってレスポンスの出力内容を変える
+    result_json = {
+        "body": {
+            "name": "account",
+            "id": account_id,
+            "account_name": result.account_name,
+            "start_on": result.start_on.strftime("%Y-%m-%d %H:%M:%S"),
+            "end_on": result.end_on.strftime("%Y-%m-%d %H:%M:%S")
+        },
+        "status": {
+            "code" : "I0001",
+            "message" : "",
+            "detail" : ""
+        }
+    }
+    return result_json
+
 def create(account_request, operation_account_id):
     """
-    /account/createで呼び出されたAPIの検索処理
+    /account/createで呼び出されたAPIの作成処理
 
     Parameters
     ----------
@@ -150,7 +199,7 @@ def search(request, user_id):
 
 def update(account_request, operation_account_id):
     """
-    /account/updateで呼び出されたAPIの検索処理
+    /account/updateで呼び出されたAPIの更新処理
 
     Parameters
     ----------
@@ -169,6 +218,49 @@ def update(account_request, operation_account_id):
     account = convertdict(account_request)
     try:
         res = Account.update(account, operation_account_id)
+        print(f"AccountApi#update res={res[0]},{res[1]}")
+        if res[0] == True:
+            code="I0001"
+            message="Updated Account Succesfuly."
+        else:
+            code="E0001"
+            message=res[1]
+        
+    except Exception as e:
+        code="E0009"
+        message=f"Updated failed {e}"
+    
+    result_json = {
+        "body": "",
+        "status": {
+            "code" : code,
+            "message" : message,
+            "detail" : ""
+        }
+    }
+    return result_json
+
+def updateWithLock(account_request, operation_account_id):
+    """
+    /account/update_for_lockで呼び出されたAPIの更新処理
+
+    Parameters
+    ----------
+    account_request : json
+        作成するアカウント詳細
+    operation_account_id : int
+        Webアプリケーション操作アカウントのID
+
+    Returns
+    -------
+    JSON形式の処理結果
+        正常
+        異常
+    """
+
+    account = convertdict(account_request)
+    try:
+        res = Account.updateWithLock(account, operation_account_id)
         print(f"AccountApi#update res={res[0]},{res[1]}")
         if res[0] == True:
             code="I0001"
