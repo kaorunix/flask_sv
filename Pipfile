@@ -18,6 +18,7 @@ pytest = "*"
 ujson = "*"
 requests = "*"
 flask-cors = "*"
+cryptography = "*"
 
 [scripts]
 start = "python backend/main.py"
