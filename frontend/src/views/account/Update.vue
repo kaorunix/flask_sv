@@ -1,23 +1,65 @@
 
 <template>
-  <div class="about">
-   <p>{{ message }}</p>
-    <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-    <h1>S.S.</h1>
-    <h2>経歴</h2>
-    <p>過去の案件</p>
-    <p>現在の案件</p>
-  </div>
+    <!-- <v-app id="inspire">
+    <div class="text-center"> -->
+    <v-dialog
+      v-model="dialog"
+      width="500"
+    >
+      <template v-slot:activator="{ on }">
+      <v-btn
+        fab
+        x-small
+        class="mx-2"
+        slot="activator"
+        color="cyan"
+        dark
+        @click="dialog = true"
+      >
+        <v-icon dark>
+          mdi-pencil
+        </v-icon>
+      </v-btn>
+      </template>
+
+      <v-card>
+        <v-card-title
+          class="headline grey lighten-2"
+          primary-title
+        >
+          更新モーダル
+        </v-card-title>
+
+        <v-card-text>
+          ここにフォームを埋める予定
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            flat
+            @click="dialog = false"
+          >
+            I accept
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  <!-- </div>
+  </v-app> -->
 </template>
 <script>
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
-  name: 'SS',
+  name: 'Create',
   data () {
     return {
-      message: '出力メッセージ'
+      dialog: false
     }
   }
 }

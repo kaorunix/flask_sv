@@ -7,6 +7,8 @@
       <template v-slot;default>
         <thead>
           <tr>
+            <th>編集</th>
+            <th>削除</th>
             <th>アカウントID</th>
             <th>アカウント名称</th>
             <th>有効開始日</th>
@@ -20,6 +22,12 @@
         </thead>
         <tbody>
           <tr v-for="account in accounts" v-bind:key="account.id">
+            <td>
+            <Update />
+            </td>
+            <td>
+            <Delete />
+            </td>
             <td>{{ account.id }}</td>
             <td>{{ account.account_name }}</td>
             <td>{{ account.start_on }}</td>
@@ -35,7 +43,10 @@
     </v-simple-table>
   </div>
 </template>
+
 <script>
+import Update from '@/views/account/Update.vue'
+import Delete from '@/views/account/Delete.vue'
 
 var accounts = [
 	{
@@ -67,7 +78,7 @@ var request = {a: "a" }
 var url = 'http://localhost:5000/api/account/search'
 const config = {
 	headers: {
-		'Content-Type': 'application/x-www-form-urlencoded',
+		'Content-Type': 'application/json',
 	},
 }
 
@@ -82,7 +93,7 @@ export default {
   mounted() {
     var self = this;
 	  this.axios
-	  	.post(url, qs.stringify(request), config)
+	  	.post(url, request, config)
 		.then(function(response) {
         console.log("List axios response");
         console.log(response);
@@ -95,6 +106,10 @@ export default {
 			console.log("List axios error")
 			console.log(err)
 		})
+  },
+  components: {
+    Update,
+    Delete
   }
 };
 </script>
