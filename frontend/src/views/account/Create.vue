@@ -135,18 +135,13 @@ export default {
       // this.$v.$touch()
 
       var self = this;
-      //var request = {
-      account_name = this.account_name
-      start_on = this.start_on
-      end_on = this.end_on
-      created_by = this.created_by
-      //}
       console.log(this.form)
       this.axios
         .post(url, this.form, config)
         .then(function (response) {
         console.log('Create axios response')
         console.log(response)
+        document.location = "http://localhost:8080/account";
       })
        .catch(err => {
 	console.log('Create axios error')
