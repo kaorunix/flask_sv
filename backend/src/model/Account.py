@@ -8,6 +8,7 @@ from model.common import strftime
 from model.common import strptime
 import time
 import model.Status
+from session import session_pool
 #from sqlalch
 
 import datetime
@@ -111,6 +112,26 @@ def getById(account_id, operation_account_id):
     ses = Session()
     res = ses.query(Account).get(account_id)
     ses.close()
+    return res
+
+def getByIdWithLock(account_id, operation_account_id):
+    """
+    アカウントidでaccountテーブルを検索をし、該当したAccountオブジェクト群を取得する
+
+    Parameters
+    ----------
+    account_id : 検索対象のアカウントid
+    operation_account_id : 操作ユーザーのアカウントid
+
+    Returns
+    -------
+    Accountオブジェクトのリスト
+    """
+    Session = scoped_session(sessionmaker(bind=engine, autocommit=False))
+    ses = Session()
+    res = ses.query(Account).get(account_id)
+    session_pool[operation_account_id] = (ses, res)
+    #ses.close()
     return res
 
 def search(account_dict, operation_account_id):
@@ -225,6 +246,42 @@ def update(account_dict, operation_account_id):
     except Exception as e:
         message = str(e)
         print(f"Account#update error:{message}")
+        ses.rollback()
+        res = False
+    finally:
+        ses.close()
+    return (res, message)    
+
+def updateWithLock(account_dict, operation_account_id):
+    account_id = account_dict.get('id')
+    # session_poolよりセッション情報と検索結果を取得する
+    (ses, account_record) = session_pool[operation_account_id]
+    res=False
+    print(f"Account#update account_record={account_record}")
+    message = ""
+    try:
+        v = account_dict.get('account_name')
+        if (v != None):
+            account_record.account_name=v
+        v = account_dict.get('start_on')
+        if (v != None):
+            account_record.start_on=v
+        v = account_dict.get('end_on')
+        if (v != None):
+            account_record.end_on=v
+        account_record.updated_by=operation_account_id
+        account_record.updated_at=strftime(datetime.datetime.now())
+        v = account_dict.get('status')
+        if (v != None):
+            account_record.status=v
+        ses.add(account_record)
+        #他のプロセスによるロックを待つ
+        #time.sleep(1)
+        ses.commit()
+        res = True
+    except Exception as e:
+        message = str(e)
+        print(f"Account#updateWithLock error:{message}")
         ses.rollback()
         res = False
     finally:
