@@ -114,23 +114,19 @@ def getById(account_id, operation_account_id):
     ses.close()
     return res
 
-def getByIdWithLock(account_id_dict, operation_account_id):
+def getByIdWithLock(account_id, operation_account_id):
     """
     アカウントidでaccountテーブルを検索をし、該当したAccountオブジェクト群を取得する
 
     Parameters
     ----------
-    account_id_dict : {
-       account_id: 検索対象のアカウントid
-       operation_account_id : 操作ユーザーのアカウントid
-    }
+    account_id: 検索対象のアカウントid
+    operation_account_id : 操作ユーザーのアカウントid
+
     Returns
     -------
     Accountオブジェクトのリスト
     """
-    account_id=account_id_dict['account_id']
-    operation_account_id=account_id_dict['operation_account_id']
-    
     Session = scoped_session(sessionmaker(bind=engine, autocommit=False))
     ses = Session()
     res = ses.query(Account).get(account_id)

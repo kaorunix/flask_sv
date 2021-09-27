@@ -219,6 +219,7 @@ def test_account_update_with_lock():
         'status' :  Status.getStatusKey("NEW")
     }
 
+    operation_account_id = 998
     # create
     Account.create(account, 999) == True
 
@@ -231,17 +232,23 @@ def test_account_update_with_lock():
     assert result[0].account_name == account['account_name']
     account_id = result[0].id
 
+    payload = {
+        "id": account_id,
+        "operation_account_id":operation_account_id
+    }
+
     # APIから検索しロックをする
-    url = f"http://localhost:5000/api/account/lock/{account_id}"
+    url = f"http://localhost:5000/api/account/lock"
     headers = {'Accept-Encoding': 'identity, deflate, compress, gzip',
                'Accept': '*/*', 'User-Agent': 'flask_sv/0.0.1',
                'Content-type': 'application/json; charset=utf-8',
                }
-    response = requests.get(url, headers=headers)
-    #print(f"lock:{response}")
+    response = requests.post(url, headers=headers, json=payload)
+    print(f"lock:{response}")
     assert response.status_code == 200
 
     data = json.loads(response.text)
+    print(f"data={data}")
     assert data['body']['name'] == "account"
     assert data['body']['account_name'] == "update_account_lock"
     assert data['body']['start_on'] == "2021-05-23 00:00:00"
@@ -256,7 +263,8 @@ def test_account_update_with_lock():
         "account_name":"update_account_lock2",
         "start_on":"2021-05-24 10:00:00",
         "end_on":"2030-12-31 12:00:00",
-        "status":"2"
+        "status":"2",
+        "operation_account_id":operation_account_id
     }
 
     # ロックしたレコードを更新する
