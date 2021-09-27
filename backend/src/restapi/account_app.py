@@ -18,9 +18,11 @@ def getAccount(id):
     res.headers['Access-Control-Allow-Credentials'] = "true"
     return res
 
-@account_bp.route('/lock/<id>', methods=['GET'])
-def lockAccount(id):
-    account_json = AccountApi.getByIdWithLock(id, system_account_id)
+@account_bp.route('/lock', methods=['POST'])
+def lockAccount():
+    payload = request.json
+    print(f"account_app#lockAccount() payload={payload}")
+    account_json = AccountApi.getByIdWithLock(payload)
     return jsonify(account_json)
     # TODO lockする場合はロックするユーザーidも渡す必要がある。POSTへの変更が望ましい。
 
@@ -66,7 +68,7 @@ def updateAccountWithLock():
     #payload = request.data.decode('utf-8')
     payload = request.json
     print(f"payload={payload}")
-    response_json = AccountApi.updateWithLock(payload, system_account_id)
+    response_json = AccountApi.updateWithLock(payload)
     return jsonify(response_json)
 
 @account_bp.route('/delete/<id>', methods=['GET'])

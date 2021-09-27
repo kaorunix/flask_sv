@@ -64,11 +64,11 @@ def getByIdWithLock(account_request):
 
     Parameters
     ----------
-    account_id : int
-        検索するアカウントのアカウントID
-    operation_account_id : int
-        Webアプリケーション操作アカウントのID
-
+    account_request: json
+    {
+       account_id : int,     検索するアカウントのアカウントID
+       operation_account_id : int    Webアプリケーション操作アカウントのID
+    }
     Returns
     -------
     ret
@@ -88,39 +88,33 @@ def getByIdWithLock(account_request):
       }
     }
     """
+    body=""
+    account_id=account_request.get('id')
+    operation_account_id=account_request.get('operation_account_id')
     
-    account_lock = {
-        'account_name' : str(account_request['account_name']),
-        'start_on' : str(account_request['start_on']),
-        'end_on' : str(account_request['end_on']),
-        'created_by' : operation_account_id,
-        'created_at' : datetime.datetime.now(),
-        'updated_by' : operation_account_id,
-        'updated_at' : datetime.datetime.now(),
-        'status' :  Status.getStatusKey("NEW")
-    }
-
     try:
-        if Account.create(account_lock, operation_account_id) == True:
+        result = Account.getByIdWithLock(account_id, operation_account_id)
+        if  result.id > 0:
             code="I0001"
-            message="Created Account Succesfuly."
+            message="Account locked Succesfuly."
+            body={
+                "name": "account",
+                "id": result.id,
+                "account_name": result.account_name,
+                "start_on": result.start_on.strftime("%Y-%m-%d %H:%M:%S"),
+                "end_on": result.end_on.strftime("%Y-%m-%d %H:%M:%S")
+            }
         else:
             code="E0001"
             message=""
+
     except:
         code="E0009"
-        message="Created failed"
+        message="Account lock failed"
 
-        result = Account.getByIdWithLock(account_id, operation_account_id)
     # TODO モデルの検索結果(正常・異常)によってレスポンスの出力内容を変える
     result_json = {
-        "body": {
-            "name": "account",
-            "id": account_id,
-            "account_name": result.account_name,
-            "start_on": result.start_on.strftime("%Y-%m-%d %H:%M:%S"),
-            "end_on": result.end_on.strftime("%Y-%m-%d %H:%M:%S")
-        },
+        "body": body,
         "status": {
             "code" : "I0001",
             "message" : "",
@@ -269,7 +263,7 @@ def update(account_request):
     }
     return result_json
 
-def updateWithLock(account_request, operation_account_id):
+def updateWithLock(account_request):
     """
     /account/update_for_lockで呼び出されたAPIの更新処理
 
@@ -288,20 +282,24 @@ def updateWithLock(account_request, operation_account_id):
     """
 
     account = convertdict(account_request)
-    try:
-        res = Account.updateWithLock(account, operation_account_id)
-        print(f"AccountApi#updateWithLock res={res[0]},{res[1]}")
-        if res[0] == True:
-            code="I0001"
-            message="Updated Account Succesfuly."
-        else:
-            code="E0001"
-            message=res[1]
+    if ('operation_account_id' in account_request):
+        operation_account_id = int(account_request['operation_account_id'])
+        try:
+            res = Account.updateWithLock(account, operation_account_id)
+            if res[0] == True:
+                code="I0001"
+                message="Updated Account Succesfuly."
+            else:
+                code="E0001"
+                message=res[1]
         
-    except Exception as e:
-        code="E0009"
-        message=f"Updated failed {e}"
-    print(f"updateWithLock message={message}")
+        except Exception as e:
+            code="E0009"
+            message=f"Updated failed {e}"
+    else:
+        code="E0002"
+        message="Invalid Argument(operation_account_id is necessary)"
+
     result_json = {
         "body": "",
         "status": {
