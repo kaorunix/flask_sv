@@ -58,7 +58,7 @@ def updateAccount():
     #payload = request.data.decode('utf-8')
     payload = request.json
     print(f"payload={payload}")
-    response_json = AccountApi.update(payload, system_account_id)
+    response_json = AccountApi.update(payload)
     return jsonify(response_json)
 
 @account_bp.route('/update_for_lock', methods=['POST'])
