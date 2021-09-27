@@ -158,7 +158,7 @@ def test_account_update():
         'updated_at' : datetime.datetime.now(),
         'status' :  Status.getStatusKey("NEW")
     }
-
+    operation_account_id = 998
     # create
     Account.create(account, 999) == True
 
@@ -175,7 +175,8 @@ def test_account_update():
         "account_name":"update_account_modified",
         "start_on":"2021-05-24 10:00:00",
         "end_on":"2030-12-31 12:00:00",
-        "status":"2"
+        "status":"2",
+        "operation_account_id":str(operation_account_id)
     }
 
     # APIから確認
@@ -200,6 +201,7 @@ def test_account_update():
     assert result[0].start_on.strftime('%Y-%m-%d %H:%M:%S') == payload['start_on'] #.strftime('%Y–%m–%d %H:%M:%S')
     assert result[0].end_on.strftime('%Y-%m-%d %H:%M:%S') == payload['end_on'] #.strftime('%Y–%m–%d %H:%M:%S')
     assert result[0].created_by == 999
+    assert result[0].updated_by == operation_account_id
     assert result[0].status == 2
 
 

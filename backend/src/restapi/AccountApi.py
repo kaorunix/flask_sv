@@ -57,7 +57,7 @@ def getById(account_id, operation_account_id):
     }
     return result_json
 
-def getByIdWithLock(account_id, operation_account_id):
+def getByIdWithLock(account_request):
     """
     /account/lock/<id>で呼び出されたAPIの検索とロック処理
 
@@ -88,7 +88,29 @@ def getByIdWithLock(account_id, operation_account_id):
     }
     """
     
-    result = Account.getByIdWithLock(account_id, operation_account_id)
+    account_lock = {
+        'account_name' : str(account_request['account_name']),
+        'start_on' : str(account_request['start_on']),
+        'end_on' : str(account_request['end_on']),
+        'created_by' : operation_account_id,
+        'created_at' : datetime.datetime.now(),
+        'updated_by' : operation_account_id,
+        'updated_at' : datetime.datetime.now(),
+        'status' :  Status.getStatusKey("NEW")
+    }
+
+    try:
+        if Account.create(account_lock, operation_account_id) == True:
+            code="I0001"
+            message="Created Account Succesfuly."
+        else:
+            code="E0001"
+            message=""
+    except:
+        code="E0009"
+        message="Created failed"
+
+        result = Account.getByIdWithLock(account_id, operation_account_id)
     # TODO モデルの検索結果(正常・異常)によってレスポンスの出力内容を変える
     result_json = {
         "body": {
@@ -197,16 +219,21 @@ def search(request, user_id):
     }
     return result_json
 
-def update(account_request, operation_account_id):
+def update(account_request):
     """
     /account/updateで呼び出されたAPIの更新処理
 
     Parameters
     ----------
     account_request : json
-        作成するアカウント詳細
-    operation_account_id : int
-        Webアプリケーション操作アカウントのID
+    {
+      "id": int, 変更するアカウントid
+      "account_name": str,アカウント名称
+      "start_on": str, "2021-05-24 10:00:00", 有効開始日
+      "end_on": str, "2030-12-31 12:00:00", 有効終了日
+      "status": int, Status.pyで定義
+      "operation_account_id" : int        Webアプリケーション操作アカウントのID
+    }
 
     Returns
     -------
@@ -217,7 +244,7 @@ def update(account_request, operation_account_id):
 
     account = convertdict(account_request)
     try:
-        res = Account.update(account, operation_account_id)
+        res = Account.update(account)
         print(f"AccountApi#update res={res[0]},{res[1]}")
         if res[0] == True:
             code="I0001"
@@ -228,6 +255,7 @@ def update(account_request, operation_account_id):
         
     except Exception as e:
         code="E0009"
+        print(f"update error={e}")
         message=f"Updated failed {e}"
     
     result_json = {
@@ -261,7 +289,7 @@ def updateWithLock(account_request, operation_account_id):
     account = convertdict(account_request)
     try:
         res = Account.updateWithLock(account, operation_account_id)
-        print(f"AccountApi#update res={res[0]},{res[1]}")
+        print(f"AccountApi#updateWithLock res={res[0]},{res[1]}")
         if res[0] == True:
             code="I0001"
             message="Updated Account Succesfuly."
@@ -272,7 +300,7 @@ def updateWithLock(account_request, operation_account_id):
     except Exception as e:
         code="E0009"
         message=f"Updated failed {e}"
-    
+    print(f"updateWithLock message={message}")
     result_json = {
         "body": "",
         "status": {
@@ -345,6 +373,8 @@ def convertdict(from_dict):
         target_dict['updated_at'] = strptime(from_dict['updated_at'])
     if ('status' in from_dict):
         target_dict['status'] = int(from_dict['status'])
+    if ('operation_account_id' in from_dict):
+        target_dict['operation_account_id'] = int(from_dict['operation_account_id'])
     return target_dict
 
         
