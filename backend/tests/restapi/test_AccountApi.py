@@ -105,6 +105,7 @@ def test_account_create():
 def test_account_search():
     """
     """
+    operation_account_id=996
     account = {
         'account_name' : "search_account",
         'start_on' : '2021-05-23 00:00:00',
@@ -122,7 +123,8 @@ def test_account_search():
     payload = {
         "account_name":"search_account",
         "start_on":"2021-05-23 00:00:00",
-        "end_on":"2030-12-31 00:00:00"
+        "end_on":"2030-12-31 00:00:00",
+        "operation_account_id": operation_account_id
     }
     #result = Account.search(query, 999)
 

@@ -32,7 +32,7 @@ def searchAccount():
     #payload = request.data.decode('utf-8')
     payload = request.json
     print(f"payload={payload}")
-    response_json = AccountApi.search(payload, system_account_id)
+    response_json = AccountApi.search(payload)
     return jsonify(response_json)
 
 @account_bp.route('/update', methods=['POST'])
