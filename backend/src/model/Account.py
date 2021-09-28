@@ -215,7 +215,7 @@ def create(account_dict, operation_account_id):
         ses.close()
     return res
 
-def update(account_dict):
+def update(account_dict, operation_account_id):
     account_id = account_dict.get('id')
     Session = scoped_session(sessionmaker(bind=engine, autocommit=False))
     res=False
@@ -232,24 +232,16 @@ def update(account_dict):
         v = account_dict.get('end_on')
         if (v != None):
             account_record.end_on=v
-        v = account_dict.get('operation_account_id')
-        if (v != None):
-            operation_account_id=v
         account_record.updated_at=strftime(datetime.datetime.now())
+        account_record.updated_by=operation_account_id
         v = account_dict.get('status')
         if (v != None):
             account_record.status=v
-        if (v != None):
-            account_record.updated_by=operation_account_id
-            ses.add(account_record)
-            #他のプロセスによるロックを待つ
-            #time.sleep(1)
-            ses.commit()
-            res = True
-        else:
-            ses.rollback()
-            message = "operation_account_id is required."
-            res = False
+        ses.add(account_record)
+        #他のプロセスによるロックを待つ
+        #time.sleep(1)
+        ses.commit()
+        res = True
     except Exception as e:
         message = str(e)
         print(f"Account#update error:{message}")
