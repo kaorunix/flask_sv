@@ -30,7 +30,7 @@ def lockAccount():
 def createAccount():
     payload = request.get_json()
     print(f"api createAccount payload={payload}")
-    response_json = AccountApi.create(payload, system_account_id)
+    response_json = AccountApi.create(payload)
     res = make_response(jsonify(response_json))
     res.headers['Access-Control-Allow-Origin'] = "http://localhost:8080"
     res.headers['Access-Control-Allow-Methods'] = "POST,GET,PUT,DELETE,OPTIONS"
