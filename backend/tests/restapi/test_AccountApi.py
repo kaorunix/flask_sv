@@ -61,10 +61,12 @@ def test_account_create():
     test_account_name = 'api_account_get'
     test_start_on = '2021-06-23 00:00:00'
     test_end_on = '2030-12-31 00:00:00'
+    test_operation_account_id = 997
     payload = {
         'account_name' : test_account_name,
         'start_on' : test_start_on,
-        'end_on' : test_end_on
+        'end_on' : test_end_on,
+        'operation_account_id': test_operation_account_id
     }
 
     # createのテスト
@@ -90,11 +92,12 @@ def test_account_create():
     account_id = result[0].id
 
     result_json = AccountApi.getById(account_id, 100)
-
+    print(f"result_json:{result_json}")
     assert result_json['body']['name'] == "account"
     assert result_json['body']['account_name'] == test_account_name
     assert result_json['body']['start_on'] == test_start_on
     assert result_json['body']['end_on'] == test_end_on
+    assert result_json['body']['created_by'] == test_operation_account_id
     assert result_json['status']['code'] == "I0001"
     assert result_json['status']['message'] == ""
 

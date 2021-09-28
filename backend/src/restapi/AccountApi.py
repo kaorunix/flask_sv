@@ -40,6 +40,11 @@ def getById(account_id, operation_account_id):
     """
     
     result = Account.getById(account_id, operation_account_id)
+    print(f"AccountApi#getById result={result}")
+    print(f"AccountApi#getById result.created_by={result.created_by}")
+    print(f"AccountApi#getById result.created_at={result.created_at}")
+    print(f"AccountApi#getById result.updated_by={result.updated_by}")
+    print(f"AccountApi#getById result.updated_at={result.updated_at}")
     # TODO モデルの検索結果(正常・異常)によってレスポンスの出力内容を変える
     result_json = {
         "body": {
@@ -47,7 +52,12 @@ def getById(account_id, operation_account_id):
             "id": account_id,
             "account_name": result.account_name,
             "start_on": result.start_on.strftime("%Y-%m-%d %H:%M:%S"),
-            "end_on": result.end_on.strftime("%Y-%m-%d %H:%M:%S")
+            "end_on": result.end_on.strftime("%Y-%m-%d %H:%M:%S"),
+            "created_by" : result.created_by,
+            "created_at" : result.created_at,
+            "updated_by" : result.updated_by,
+            "updated_at" : result.updated_at,
+            "status" :  Status.getStatusKey("NEW")
         },
         "status": {
             "code" : "I0001",
@@ -55,6 +65,9 @@ def getById(account_id, operation_account_id):
             "detail" : ""
         }
     }
+            #"created_at" : result.created_at.strftime("%Y-%m-%d %H:%M:%S),
+            #"updated_by" : result.updated_by,
+            #"updated_at" : result.updated_at.strftime("%Y-%m-%d %H:%M:%S),
     return result_json
 
 def getByIdWithLock(account_request):
@@ -122,7 +135,7 @@ def getByIdWithLock(account_request):
     }
     return result_json
 
-def create(account_request, operation_account_id):
+def create(account_request):
     """
     /account/createで呼び出されたAPIの作成処理
 
@@ -140,6 +153,7 @@ def create(account_request, operation_account_id):
         異常
     """
 
+    operation_account_id = account_request.get('operation_account_id')
     account = {
         'account_name' : str(account_request['account_name']),
         'start_on' : str(account_request['start_on']),
@@ -150,7 +164,7 @@ def create(account_request, operation_account_id):
         'updated_at' : datetime.datetime.now(),
         'status' :  Status.getStatusKey("NEW")
     }
-
+    print(f"AccountApi#create operation_account_id={operation_account_id}")
     try:
         if Account.create(account, operation_account_id) == True:
             code="I0001"
