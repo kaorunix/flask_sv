@@ -45,7 +45,7 @@ def searchAccount():
     print(f"api searchAccount requestjson={request.get_json(force=True)} data={request.form} encode={request.data.decode('utf-8')}")
     payload = request.get_json()
     print(f"api searchAccount payload={payload}")
-    response_json = AccountApi.search(payload, system_account_id)
+    response_json = AccountApi.search(payload)
     res = make_response(jsonify(response_json))
     res.headers['Access-Control-Allow-Origin'] = "http://localhost:8080"
     res.headers['Access-Control-Allow-Methods'] = "POST,GET,PUT,DELETE,OPTIONS"
