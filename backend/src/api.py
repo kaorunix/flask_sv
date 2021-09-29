@@ -11,7 +11,11 @@ def getAccount(id):
     account_json = AccountApi.getById(id, system_account_id)
     res = make_response(jsonify(account_json))
     res.headers['Access-Control-Allow-Origin'] = "http://localhost:8080/"
-    res.headers['Access-Control-Allow-Methods'] = "POST,GET,PUT,DELETE"
+    res.headers['Access-Control-Allow-Methods'] = "POST,GET,PUT,DELETE,OPTIONS"
+    res.headers['Access-Control-Max-Age'] = 17280000
+    res.headers['Access-Control-Allow-Headers'] = "*"
+    res.headers['Content-Type'] = 'application/json'
+    res.headers['Access-Control-Allow-Credentials'] = "true"
     return res
 
 @api_bp.route('/account/create', methods=['POST'])

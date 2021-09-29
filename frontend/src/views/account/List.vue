@@ -74,7 +74,9 @@ var accounts = [
 ]
 import qs from 'qs';
 var header = 'application/json'
-var request = {a: "a" }
+var request = {
+  a:'a'
+}
 var url = 'http://localhost:5000/api/account/search'
 const config = {
 	headers: {

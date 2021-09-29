@@ -55,6 +55,7 @@ def getById(account_id, operation_account_id):
             "detail" : ""
         }
     }
+    print(f"getByid$response={result_json}");
     return result_json
 
 def create(account_request, operation_account_id):
@@ -74,7 +75,7 @@ def create(account_request, operation_account_id):
         正常
         異常
     """
-
+    print(f"AccountApi:create account_request={account_request}")
     account = {
         'account_name' : str(account_request['account_name']),
         'start_on' : str(account_request['start_on']),
@@ -127,7 +128,7 @@ def search(request, user_id):
         正常
         異常
     """
-
+    print(f"AccountApi#search request={request}")
     account_request = convertdict(request)
     try:
         results = Account.search(account_request, user_id)
