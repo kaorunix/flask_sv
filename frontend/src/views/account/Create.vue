@@ -111,7 +111,7 @@ export default {
         account_name: this.account_name,
         start_on: this.start_on.concat(" 00:00:00"),
         end_on: this.end_on.concat(" 00:00:00"),
-        created_by: parseInt(this.created_by)
+        operation_account_id: parseInt(this.created_by)
       }
     },
   },

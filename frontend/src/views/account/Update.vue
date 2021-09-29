@@ -109,11 +109,11 @@ var header = 'application/json'
 var request = {
   a:'a'
 }
-var urlget = 'http://localhost:5000/api/account/get/'
-var urlupdate = 'http://localhost:5000/api/account/update'
+var urllock = 'http://localhost:5000/api/account/lock'
+var urlupdate = 'http://localhost:5000/api/account/update_for_lock'
 const configget = {
 	 headers: {
-	 	'Content-Type': 'text/plain',
+	 	'Content-Type': 'application/json',
 	 },
 }
 const configupdate = {
@@ -125,19 +125,19 @@ const configupdate = {
   var start_on = '';
   var end_on = '';
   var operation_account_id = 0;
-  var account_id = 970;
+  var account_id = 1448;
 export default {
   name: 'Update',
   data () {
     return {
       dialog: false,
       account: {
-        id: 963,
+        id: 1448,
         account_name: '',
         start_on: '',
         end_on: ''
       },
-      operation_account_id: 0
+      operation_account_id: 50
     }
   },
   mounted () {
@@ -165,9 +165,15 @@ export default {
         account_name: this.account.account_name,
         start_on: this.account.start_on.concat(" 00:00:00"),
         end_on: this.account.end_on.concat(" 00:00:00"),
-        updated_by: parseInt(this.operation_account_id)
+        operation_account_id: parseInt(this.operation_account_id)
       }
     },
+    req () {
+      return {
+        id: this.account.id,
+        operation_account_id: parseInt(this.operation_account_id)
+      }
+    }
   },
   watch: {
     name () {
@@ -178,7 +184,7 @@ export default {
     getAccount () {
       console.log("getAccount was called");
       this.axios
-      .get(urlget + account_id.toString(10), configget)
+      .post(urllock, this.req, configget)
       .then(function(response) {
           console.log("Get axios response");
           console.log(response);
@@ -187,7 +193,7 @@ export default {
           console.log(self.account);
           self.meesage=response.status.message; 
           console.log(self.accounts);
-          account = response.json;
+          account = response.json.get("body");
         })
       .catch(err => {
         console.log("Get axios error")
