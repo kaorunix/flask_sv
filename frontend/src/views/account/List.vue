@@ -23,7 +23,7 @@
         <tbody>
           <tr v-for="account in accounts" v-bind:key="account.id">
             <td>
-            <Update />
+            <Update v-bind:account-id="account.id"></Update>
             </td>
             <td>
             <Delete />

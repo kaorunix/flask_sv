@@ -106,9 +106,7 @@
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue'
 var header = 'application/json'
-var request = {
-  a:'a'
-}
+
 var urllock = 'http://localhost:5000/api/account/lock'
 var urlupdate = 'http://localhost:5000/api/account/update_for_lock'
 const configget = {
@@ -128,11 +126,17 @@ const configupdate = {
   var account_id = 1448;
 export default {
   name: 'Update',
+  props: {
+    accountId: {
+       type: Number,
+       required: true
+     }
+  },
   data () {
     return {
       dialog: false,
       account: {
-        id: 1448,
+        id: '',
         account_name: '',
         start_on: '',
         end_on: ''
@@ -158,6 +162,9 @@ export default {
 		// 	console.log(err)
 		// })
   },
+  created: function () {
+    //getAccount()
+  },
   computed: {
     form () {
       return {
@@ -182,18 +189,24 @@ export default {
   },
   methods: {
     getAccount () {
+      var request = {
+        id: this.accountId,
+        operation_account_id: parseInt(this.operation_account_id)
+      }
       console.log("getAccount was called");
       this.axios
-      .post(urllock, this.req, configget)
+      .post(urllock, request, configget)
       .then(function(response) {
           console.log("Get axios response");
           console.log(response);
           console.log(response.headers);
-          self.account=response.json.body;
+          self.account=response.data.body;
+          //this.$set(this.account,"account_name", response.data.body.account_name)
+          console.log("self.account");
           console.log(self.account);
+          self.account.account_name = "ABC";
           self.meesage=response.status.message; 
-          console.log(self.accounts);
-          account = response.json.get("body");
+          //account = response.json.get("body");
         })
       .catch(err => {
         console.log("Get axios error")
