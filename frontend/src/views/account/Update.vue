@@ -119,11 +119,25 @@ const configupdate = {
 	 	'Content-Type': 'application/json',
 	 },
 }
-  var account_name = '';
-  var start_on = '';
-  var end_on = '';
-  var operation_account_id = 0;
-  var account_id = 1448;
+function applyDateFormat(datestring) {
+  if (datestring.search(/^\d{4}[-\/]\d{2}[-\/]\d{2} \d{2}:\d{2}:\d{2}$/)
+ == 0) {
+    return datestring
+  } else if (datestring.search(/^\d{4}[-\/]\d{2}[-\/]\d{2}$/) == 0) {
+    return datestring.concat(" 00:00:00")
+  }
+}
+
+function setAccount (account) {
+  var a = {
+    id: account.id,
+    account_name: account.account_name,
+    start_on: applyDateFormat(account.start_on),
+    end_on: applyDateFormat(account.end_on)
+  }
+  return a
+}
+
 export default {
   name: 'Update',
   props: {
@@ -144,48 +158,16 @@ export default {
       operation_account_id: 50
     }
   },
-  mounted () {
-  	// this.axios
-	  // .get(url + account_id.toString(10), config)
-		// .then(function(response) {
-    //     console.log("Update axios response");
-    //     console.log(response);
-    //     console.log(response.headers);
-    //     self.account=response.json.body;
-    //     console.log(self.account);
-    //     self.meesage=response.status.message; 
-    //     console.log(self.accounts);
-    //     account = response.json;
-    //   })
-		// .catch(err => {
-		// 	console.log("Update axios error")
-		// 	console.log(err)
-		// })
-  },
-  created: function () {
-    //getAccount()
-  },
   computed: {
     form () {
       return {
         id: this.account.id,
         account_name: this.account.account_name,
-        start_on: this.account.start_on.concat(" 00:00:00"),
-        end_on: this.account.end_on.concat(" 00:00:00"),
-        operation_account_id: parseInt(this.operation_account_id)
-      }
-    },
-    req () {
-      return {
-        id: this.account.id,
+        start_on: applyDateFormat(this.account.start_on),
+        end_on: applyDateFormat(this.account.end_on),
         operation_account_id: parseInt(this.operation_account_id)
       }
     }
-  },
-  watch: {
-    name () {
-      this.errorMessages = ''
-    },
   },
   methods: {
     getAccount () {
@@ -194,19 +176,16 @@ export default {
         operation_account_id: parseInt(this.operation_account_id)
       }
       console.log("getAccount was called");
+      const self = this
       this.axios
       .post(urllock, request, configget)
       .then(function(response) {
           console.log("Get axios response");
           console.log(response);
-          console.log(response.headers);
-          self.account=response.data.body;
-          //this.$set(this.account,"account_name", response.data.body.account_name)
+          self.account = setAccount(response.data.body);
           console.log("self.account");
           console.log(self.account);
-          self.account.account_name = "ABC";
-          self.meesage=response.status.message; 
-          //account = response.json.get("body");
+          self.meesage = response.status.message;
         })
       .catch(err => {
         console.log("Get axios error")
@@ -235,7 +214,7 @@ export default {
         document.location = "http://localhost:8080/account";
       })
        .catch(err => {
-	console.log('Update axios error')
+	      console.log('Update axios error')
         console.log(err)
       })
     },
