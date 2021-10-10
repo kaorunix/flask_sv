@@ -36,31 +36,6 @@
   </div>
 </template>
 <script>
-
-var accounts = [
-  {
-    id: 123,
-    account_name: 'macbeth',
-    start_on: '2021/02/01 10:00:00',
-    end_in: '2021/11/30 18:00:00',
-    created_by: 10,
-    created_at: '2021/08/25 12:00:00',
-    updated_by: 10,
-    updated_at: '2021/08/25 12:00:00',
-    status: 0
-  },
-  {
-    id: 124,
-    account_name: 'duncan',
-    start_on: '2021/05/01 10:00:00',
-    end_in: '2021/10/30 18:00:00',
-    created_by: 12,
-    created_at: '2021/08/25 12:00:00',
-    updated_by: 10,
-    updated_at: '2021/08/25 12:00:00',
-    status: 1
-  }
-]
 var header = 'application/json'
 var request = {
   operation_account_id: 100
@@ -76,7 +51,7 @@ export default {
   name: 'List',
   data () {
     return {
-      accounts: accounts
+      accounts: []
     }
   },
   mounted () {
