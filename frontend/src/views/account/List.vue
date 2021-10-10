@@ -1,3 +1,4 @@
+
 <template>
   <div class="about">
     <p>{{ message }}</p>
@@ -24,7 +25,7 @@
             <td>{{ account.start_on }}</td>
             <td>{{ account.end_on }}</td>
             <td>{{ account.created_by }}</td>
-            <td>{{ account.created_at }}</td>
+            <td>{{ account.created_at}} </td>
             <td>{{ account.updated_by }}</td>
             <td>{{ account.updated_at }}</td>
             <td>{{ account.status }}</td>
@@ -35,6 +36,7 @@
   </div>
 </template>
 <script>
+
 var accounts = [
   {
     id: 123,
@@ -59,14 +61,38 @@ var accounts = [
     status: 1
   }
 ]
+var header = 'application/json'
+var request = {
+  operation_account_id: 100
+}
+var url = 'http://localhost:5000/api/account/search'
+const config = {
+  headers: {
+    'Content-Type': header
+  }
+}
 
 export default {
   name: 'List',
   data () {
     return {
-      accounts: accounts,
-      message: '出力メッセージ'
+      accounts: accounts
     }
+  },
+  mounted () {
+    var self = this
+    this.axios
+      .post(url, request, config)
+      .then(function (response) {
+        console.log('List axios response %o', response.data.body)
+        self.accounts = response.data.body
+        self.message = response.data.status.message
+      })
+      .catch(err => {
+        console.log('List axios error')
+        console.log(err)
+      })
   }
 }
+
 </script>
