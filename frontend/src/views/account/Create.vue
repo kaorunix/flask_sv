@@ -1,3 +1,4 @@
+
 <template>
   <div class="about">
     <p>{{ message }}</p>
@@ -78,4 +79,68 @@
   </div>
 </template>
 <script>
+
+var contentType = 'application/json'
+var url = 'http://localhost:5000/api/account/create'
+const config = {
+  headers: {
+    'Content-Type': contentType
+  }
+}
+
+export default {
+  name: 'account_create',
+  data: function () {
+    return {
+      account_name: '',
+      start_on: '',
+      end_on: '',
+      created_by: '',
+      message: '出力メッセージ'
+    }
+  },
+  computed: {
+    form () {
+      return {
+        account_name: this.account_name,
+        start_on: this.start_on.concat(' 00:00:00'),
+        end_on: this.end_on.concat(' 00:00:00'),
+        operation_account_id: parseInt(this.created_by)
+      }
+    }
+  },
+  methods: {
+    validate () {
+      this.$refs.form.validate()
+    },
+    reset () {
+      this.$refs.form.reset()
+    },
+    resetValidation () {
+      this.$refs.form.resetValidation()
+    },
+    submit () {
+      console.log(this.form)
+      this.axios
+        .post(url, this.form, config)
+        .then(function (response) {
+          console.log('Create axios response')
+          console.log(response)
+          document.location = 'http://localhost:8080/account'
+        })
+        .catch(err => {
+          console.log('Create axios error')
+          console.log(err)
+        })
+    },
+    clear () {
+      this.$v.$reset()
+      this.account_name = ''
+      this.start_on = ''
+      this.end_on = ''
+      this.created_by = ''
+    }
+
+  }
+}
 </script>
