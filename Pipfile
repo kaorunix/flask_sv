@@ -7,7 +7,6 @@ verify_ssl = true
 autopep8 = "*"
 flake8 = "*"
 rope = "*"
-sync = "*"
 
 [packages]
 flask = "*"
@@ -20,7 +19,6 @@ ujson = "*"
 requests = "*"
 flask-cors = "*"
 cryptography = "*"
-sync = "*"
 
 [scripts]
 start = "python backend/main.py"
