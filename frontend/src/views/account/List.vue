@@ -1,4 +1,3 @@
-
 <template>
   <div class="about">
     <p>{{ message }}</p>
@@ -7,6 +6,7 @@
       <template v-slot;default>
         <thead>
           <tr>
+            <th>編集</th>
             <th>アカウントID</th>
             <th>アカウント名称</th>
             <th>有効開始日</th>
@@ -20,12 +20,13 @@
         </thead>
         <tbody>
           <tr v-for="account in accounts" v-bind:key="account">
+            <td><Update /></td>
             <td>{{ account.id }}</td>
             <td>{{ account.account_name }}</td>
             <td>{{ account.start_on }}</td>
             <td>{{ account.end_on }}</td>
             <td>{{ account.created_by }}</td>
-            <td>{{ account.created_at}} </td>
+            <td>{{ account.created_at }}</td>
             <td>{{ account.updated_by }}</td>
             <td>{{ account.updated_at }}</td>
             <td>{{ account.status }}</td>
@@ -36,6 +37,8 @@
   </div>
 </template>
 <script>
+import Update from '@/views/account/Update.vue'
+
 var header = 'application/json'
 var request = {
   operation_account_id: 100
@@ -51,7 +54,8 @@ export default {
   name: 'List',
   data () {
     return {
-      accounts: []
+      accounts: [],
+      dialog: false
     }
   },
   mounted () {
@@ -67,7 +71,9 @@ export default {
         console.log('List axios error')
         console.log(err)
       })
+  },
+  components: {
+    Update
   }
 }
-
 </script>
