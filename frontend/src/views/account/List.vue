@@ -1,5 +1,5 @@
 <template>
-  <div class="about">
+  <div class="account_list">
     <p>{{ message }}</p>
     <h3>アカウント一覧</h3>
     <v-simple-table>
@@ -19,8 +19,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="account in accounts" v-bind:key="account">
-            <td><Update /></td>
+          <tr v-for="account in accounts" v-bind:key="account.id">
+            <td>
+              <Update v-bind:account-id="account.id"></Update>
+            </td>
             <td>{{ account.id }}</td>
             <td>{{ account.account_name }}</td>
             <td>{{ account.start_on }}</td>
@@ -39,14 +41,13 @@
 <script>
 import Update from '@/views/account/Update.vue'
 
-var header = 'application/json'
 var request = {
   operation_account_id: 100
 }
 var url = 'http://localhost:5000/api/account/search'
 const config = {
   headers: {
-    'Content-Type': header
+    'Content-Type': 'application/json'
   }
 }
 
@@ -55,7 +56,7 @@ export default {
   data () {
     return {
       accounts: [],
-      dialog: false
+      message: null
     }
   },
   mounted () {

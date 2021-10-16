@@ -11,7 +11,7 @@
         slot="activator"
         color="cyan"
         dark
-        @click="dialog = true; "
+        @click="getAccount(); dialog = true; "
       >
         <v-icon dark>
           mdi-pencil
@@ -96,23 +96,75 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  <!-- </div>
-  </v-app> -->
 </template>
 <script>
+var url = 'http://localhost:5000/api/account/'
+const config = {
+	 headers: {
+	 	'Content-Type': 'application/json',
+	 }
+}
+
+function applyDateFormat(datestring) {
+  if (datestring.search(/^\d{4}[-\/]\d{2}[-\/]\d{2} \d{2}:\d{2}:\d{2}$/)
+ == 0) {
+    return datestring
+  } else if (datestring.search(/^\d{4}[-\/]\d{2}[-\/]\d{2}$/) == 0) {
+    return datestring.concat(" 00:00:00")
+  }
+}
+
+function setAccount (account) {
+  var a = {
+    id: account.id,
+    account_name: account.account_name,
+    start_on: applyDateFormat(account.start_on),
+    end_on: applyDateFormat(account.end_on)
+  }
+  return a
+}
+
 export default {
   name: 'Update',
+  props: {
+    accountId: {
+       type: Number,
+       required: true
+     }
+  },
   data () {
     return {
       dialog: false,
       account: {
-        id: 1234,
+        id: '',
         account_name: '',
         start_on: '',
         end_on: ''
       },
-      operation_account_id: 4321
+      operation_account_id: 50
     }
+  },
+  methods: {
+    getAccount () {
+      var request = {
+        id: this.accountId,
+        operation_account_id: parseInt(this.operation_account_id)
+      }
+      console.log("getAccount was called");
+      const self = this
+      this.axios
+      .post(url + 'lock', request, config)
+      .then(function(response) {
+          console.log("Get axios response");
+          console.log(response);
+          self.account = setAccount(response.data.body);
+          self.meesage = response.data.status.message;
+        })
+      .catch(err => {
+        console.log("Get axios error")
+        console.log(err)
+      })
+    },
   }
 }
 </script>
