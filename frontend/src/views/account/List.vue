@@ -7,6 +7,7 @@
         <thead>
           <tr>
             <th>編集</th>
+            <th>削除</th>
             <th>アカウントID</th>
             <th>アカウント名称</th>
             <th>有効開始日</th>
@@ -22,6 +23,9 @@
           <tr v-for="account in accounts" v-bind:key="account.id">
             <td>
               <Update v-bind:account-id="account.id"></Update>
+            </td>
+            <td>
+              <Delete v-bind:account="account"></Delete>
             </td>
             <td>{{ account.id }}</td>
             <td>{{ account.account_name }}</td>
@@ -40,6 +44,7 @@
 </template>
 <script>
 import Update from '@/views/account/Update.vue'
+import Delete from '@/views/account/Delete.vue'
 
 var request = {
   operation_account_id: 100
@@ -74,7 +79,8 @@ export default {
       })
   },
   components: {
-    Update
+    Update,
+    Delete
   }
 }
 </script>
