@@ -1,19 +1,18 @@
 # プロジェクト
 
 ## テーブル設計
-
 ### プロジェクトテーブル
 |項目名|Field|Type|Null|Key|Default|Extra|Remark|
 |---|---|---|---|---|---|---|---|
-|プロジェクトID|project_id|varchar(30)|No|PRI|NULL|||
+|プロジェクトID|project_id|int|No|PRI|NULL|auto_increment||
 |プロジェクト名|project_name|varchar(60)|No||NULL|||
 |説明|description|varchar(200)|Yes||NULL|||
 |進行状況|status|int|No||0||0=未着手, 1=進行中, 2=完了|
-|作成者ID|creater_id|varchar(20)|No||NULL|||
-|作成日|created_at|datetime|No||NULL|||
-|更新者ID|updater_id|varchar(20)|No||NULL|||
-|更新日|updated_at|datetime|No||NULL|||
-<br/>
+|作成者ID|creater_id|int|No||NULL|||
+|作成日時|created_at|datetime|No||NULL|||
+|更新者ID|updater_id|int|No||NULL|||
+|更新日時|updated_at|datetime|No||NULL|||
+<br>
 ***
 
 ## API設計
@@ -32,7 +31,9 @@
         "project_name": <project_name>,
         "description": <description>,
         "status": <status>,
+        "created_by": <creater_id>,
         "created_at": <created_at>,
+        "last_updated_by": <updater_id>,
         "last_updated_at": <update_at>
     },
     "status": {
@@ -44,7 +45,7 @@
 ```
 ***
 
-### プロジェクトの登録
+### プロジェクトの新規登録
 #### URL
   /project/add/
 #### HTTP METHOD
@@ -55,6 +56,8 @@
     "project_id":
     "project_name":
     "description":
+    "created_by":
+    "updated_by":
     "staus":
 }
 ```
@@ -82,6 +85,8 @@
 {
     "project_name":
     "description":
+    "created_by":
+    "updated_by":
     "status":
 }
 ```
@@ -100,7 +105,6 @@
 ***
 
 ### プロジェクトの検索
-
 #### URL
   /project/search/
 #### HTTP METHOD
@@ -111,7 +115,9 @@
     "project_id":
     "project_name":
     "status":
+    "created_by":
     "created_at":
+    "updated_by":
     "last_update_at":
 }
 ```
@@ -119,14 +125,28 @@
 #### response
 ```
 {
-    "body": {
-        "project_id": <project_id>,
-        "project_name": <project_name>,
-        "description": <description>,
-        "status": <status>,
-        "created_at": <created_at>,
-        "last_updated_at": <update_at>
-    },
+    "body": [
+      {
+          "project_id": <project_id>,
+          "project_name": <project_name>,
+          "description": <description>,
+          "status": <status>,
+          "created_by": <creater_id>,
+          "created_at": <created_at>,
+          "last_updated_by": <updater_id>,
+          "last_updated_at": <update_at>
+      },
+      {
+          "project_id": <project_id>,
+          "project_name": <project_name>,
+          "description": <description>,
+          "status": <status>,
+          "created_by": <creater_id>,
+          "created_at": <created_at>,
+          "last_updated_by": <updater_id>,
+          "last_updated_at": <update_at>
+      }
+    ],
     "status": {
         "code" : "I0001",
         "message" : "",
@@ -137,7 +157,6 @@
 ***
 
 ### プロジェクトの削除
-
 #### URL
   /project/delete/<project_id>
 #### HTTP METHOD
