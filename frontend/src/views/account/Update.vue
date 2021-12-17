@@ -105,7 +105,7 @@
   </v-dialog>
 </template>
 <script>
-var url = 'http://localhost:5000/api/account/'
+var url = '/api/account/'
 const config = {
   headers: {
     'Content-Type': 'application/json'
@@ -170,7 +170,7 @@ export default {
       console.log('getAccount was called')
       const self = this
       this.axios
-        .post(url + 'lock', request, config)
+        .post(self.axios.defaults.baseURL + url + 'lock', request, config)
         .then(function (response) {
           console.log('Get axios response')
           console.log(response)
@@ -188,11 +188,11 @@ export default {
     submit () {
       console.log(this.form)
       this.axios
-        .post(url + 'update_for_lock', this.form, config)
+        .post(this.axios.defaults.baseURL + url + 'update_for_lock', this.form, config)
         .then(function (response) {
           console.log('Update axios response')
           console.log(response)
-          document.location = 'http://localhost:8080/account'
+          document.location = 'https://spa-study2.colibrifw.org/account'
         })
         .catch(err => {
           console.log('Update axios error')

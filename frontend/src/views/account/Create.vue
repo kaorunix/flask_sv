@@ -81,7 +81,7 @@
 <script>
 
 var contentType = 'application/json'
-var url = 'http://localhost:5000/api/account/create'
+var url = '/api/account/create'
 const config = {
   headers: {
     'Content-Type': contentType
@@ -121,12 +121,13 @@ export default {
     },
     submit () {
       console.log(this.form)
+      const self = this
       this.axios
-        .post(url, this.form, config)
+        .post(self.axios.defaults.baseURL + url, this.form, config)
         .then(function (response) {
           console.log('Create axios response')
           console.log(response)
-          document.location = 'http://localhost:8080/account'
+          document.location = 'https://spa-study2.colibrifw.org/account'
         })
         .catch(err => {
           console.log('Create axios error')
