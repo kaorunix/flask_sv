@@ -3,14 +3,15 @@ from flask_restful import Api, Resource
 from restapi import AccountApi
 
 system_account_id=999
-
+origin="*"
+#origin="https://spa-study2.colibrifw.org/"
 account_bp = Blueprint('account_app', __name__, url_prefix='/api/account')
 
 @account_bp.route('/get/<id>', methods=['GET'])
 def getAccount(id):
     account_json = AccountApi.getById(id, system_account_id)
     res = make_response(jsonify(account_json))
-    res.headers['Access-Control-Allow-Origin'] = "http://localhost:8080/"
+    res.headers['Access-Control-Allow-Origin'] = origin
     res.headers['Access-Control-Allow-Methods'] = "POST,GET,PUT,DELETE,OPTIONS"
     res.headers['Access-Control-Max-Age'] = 17280000
     res.headers['Access-Control-Allow-Headers'] = "*"
@@ -32,7 +33,7 @@ def createAccount():
     print(f"api createAccount payload={payload}")
     response_json = AccountApi.create(payload)
     res = make_response(jsonify(response_json))
-    res.headers['Access-Control-Allow-Origin'] = "http://localhost:8080"
+    res.headers['Access-Control-Allow-Origin'] = origin
     res.headers['Access-Control-Allow-Methods'] = "POST,GET,PUT,DELETE,OPTIONS"
     res.headers['Access-Control-Max-Age'] = 17280000
     res.headers['Access-Control-Allow-Headers'] = "*"
@@ -46,8 +47,9 @@ def searchAccount():
     payload = request.get_json()
     print(f"api searchAccount payload={payload}")
     response_json = AccountApi.search(payload)
+    print(f"res={response_json}")
     res = make_response(jsonify(response_json))
-    res.headers['Access-Control-Allow-Origin'] = "http://localhost:8080"
+    res.headers['Access-Control-Allow-Origin'] = "*"
     res.headers['Access-Control-Allow-Methods'] = "POST,GET,PUT,DELETE,OPTIONS"
     res.headers['Access-Control-Max-Age'] = 17280000
     res.headers['Access-Control-Allow-Headers'] = "*"
