@@ -49,7 +49,7 @@ import Delete from '@/views/account/Delete.vue'
 var request = {
   operation_account_id: 100
 }
-var url = 'http://localhost:5000/api/account/search'
+var url = '/api/account/search'
 const config = {
   headers: {
     'Content-Type': 'application/json'
@@ -66,16 +66,31 @@ export default {
   },
   mounted () {
     var self = this
+    console.log(self.axios.defaults.baseURL)
     this.axios
-      .post(url, request, config)
+      .post(self.axios.defaults.baseURL + url, request, config)
       .then(function (response) {
         console.log('List axios response %o', response.data.body)
         self.accounts = response.data.body
         self.message = response.data.status.message
       })
-      .catch(err => {
+      .catch((err) => {
         console.log('List axios error')
         console.log(err)
+        for (const key of Object.keys(err)) {
+          console.log(key)
+          console.log(err[key])
+        }
+        if (err.response) {
+          // client received an error response (5xx, 4xx)
+          console.log(err.response)
+        } else if (err.request) {
+          // client never received a response, or request never left
+          console.log(err.request)
+        } else {
+          // anything else
+          console.log('else')
+        }
       })
   },
   components: {

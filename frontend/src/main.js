@@ -5,9 +5,10 @@ import vuetify from './plugins/vuetify'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
-axios.defaults.baseURL = 'http://localhost:8080';
-axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
-axios.defaults.headers.post['Access-Control-Allow-Origin'] = 'http://localhost:5000';
+axios.defaults.baseURL = 'https://spa-study-api.colibrifw.org'
+axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
+axios.defaults.headers.post['Access-Control-Allow-Origin'] =
+  '*'
 
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)
@@ -15,5 +16,5 @@ Vue.use(VueAxios, axios)
 new Vue({
   router,
   vuetify,
-  render: h => h(App)
+  render: (h) => h(App)
 }).$mount('#app')
