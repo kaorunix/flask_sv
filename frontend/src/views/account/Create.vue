@@ -127,7 +127,7 @@ export default {
         .then(function (response) {
           console.log('Create axios response')
           console.log(response)
-          document.location = 'https://spa-study2.colibrifw.org/account'
+          document.location = 'http://localhost:8080/account'
         })
         .catch(err => {
           console.log('Create axios error')
