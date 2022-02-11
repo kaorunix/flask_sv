@@ -19,6 +19,7 @@ ujson = "*"
 requests = "*"
 flask-cors = "*"
 cryptography = "*"
+gunicorn = "*"
 
 [scripts]
 start = "python backend/main.py"

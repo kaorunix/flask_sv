@@ -235,9 +235,14 @@ def search_range(request):
     Parameters
     ----------
     account_request : json
-        アカウント検索項目
-    operation_account_id : int
-        Webアプリケーション操作アカウントのID
+    {
+      "id": int, 変更するアカウントid
+      "account_name": str,アカウント名称
+      "start_on": str, "2021-05-24 10:00:00", 有効開始日
+      "end_on": str, "2030-12-31 12:00:00", 有効終了日
+      "status": int, Status.pyで定義
+      "operation_account_id" : int        Webアプリケーション操作アカウントのID
+    }
 
     Returns
     -------

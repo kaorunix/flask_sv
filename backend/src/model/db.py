@@ -8,7 +8,7 @@ import subprocess
 DATABASE = 'mysql+pymysql'
 USER = 'creist'
 PASSWORD = os.environ['MYSQL_PASSWORD']
-HOST = '127.0.0.1'
+HOST = os.environ['MYSQL_HOST']
 PORT = '3306'
 DB_NAME = 'flask_sv'
 

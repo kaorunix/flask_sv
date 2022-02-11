@@ -1,5 +1,7 @@
 from flask import Flask, render_template
 from restapi.account_app import account_bp
+from flask_cors import CORS
+
 from restapi.project_app import project_bp
 from restapi.story_app import story_bp
 from restapi.sprint_app import sprint_bp
@@ -37,6 +39,7 @@ app.register_blueprint(project_group2_bp)
 app.register_blueprint(authority2_bp)
 app.register_blueprint(page2_bp)
 app.config['JSON_AS_ASCII'] = False
+CORS(app)
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
@@ -44,4 +47,4 @@ def index(path):
     return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=8000)
