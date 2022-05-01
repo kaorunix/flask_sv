@@ -15,7 +15,7 @@ Account _$AccountFromJson(Map<String, dynamic> json) => Account(
       created_at: DateTime.parse(json['created_at'] as String),
       updated_by: json['updated_by'] as int,
       updated_at: DateTime.parse(json['updated_at'] as String),
-      status: json['status'] as int,
+      status: json['status'] as String,
     );
 
 Map<String, dynamic> _$AccountToJson(Account instance) => <String, dynamic>{

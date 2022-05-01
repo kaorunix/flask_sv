@@ -99,7 +99,7 @@ class Account {
   final DateTime created_at;
   final int updated_by;
   final DateTime updated_at;
-  final int status;
+  final String status;
 
   Account({
       required this.id,

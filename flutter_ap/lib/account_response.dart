@@ -8,7 +8,7 @@ import 'dart:math';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:flutter_ap/account_model.dart';
 import 'package:flutter_ap/status.dart';
-part 'account_request.g.dart';
+part 'account_response.g.dart';
 
 /*
 List<Account> toListfromSearch(List<Map<String, Map<String, String>>> accountsOfSearch) {
@@ -34,16 +34,16 @@ List<Account> toListfromSearch(List<Map<String, Map<String, String>>> accountsOf
 */
 
 @JsonSerializable(nullable: false)
-class AccountRequest {
+class AccountResponse {
   final List<Account> body;
   final RequestStatus status;
 
-  AccountRequest({
+  AccountResponse({
       required this.body,
       required this.status
   });
-  factory AccountRequest.fromJson(Map<String, dynamic> json) => _$AccountRequestFromJson(json);
-  Map<String, dynamic> toJson() => _$AccountRequestToJson(this);
+  factory AccountResponse.fromJson(Map<String, dynamic> json) => _$AccountResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$AccountResponseToJson(this);
 
   @override
   String toString() => json.encode(toJson());
