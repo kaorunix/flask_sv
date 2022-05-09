@@ -54,6 +54,11 @@
           </v-list-item>
         </v-list>
       </v-menu>
+      <v-menu offset-y>
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on" color="#9182D9" @click="logout()">Logout</v-btn>
+        </template>
+      </v-menu>
     </v-app-bar>
     <v-main app>
       <router-view />
@@ -63,8 +68,20 @@
 </template>
 
 <script>
+// import  from 'vue'
+
 export default {
-  data () {
+  name: 'MainView',
+  methods: {
+    logout () {
+      return this.$store.dispatch('logout')
+        .then(() => {
+          this.$router.push('/login')
+        })
+        .catch(error => { throw error })
+    }
+  },
+  data: function () {
     return {
       drawer: null,
       company_menu: [
